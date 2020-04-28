@@ -104,7 +104,6 @@ namespace subscriptions {
         if (input == 10) { // enter - open video
             std::string cmd = "mpv \"" + requests::extract_video_link(videos[selected]) + "\"";
             system(cmd.c_str());
-            std::cout << cmd.c_str();
             return true;
         }
         if (input == 'r') { // r - refresh TODO: locks up i/o, thread will redraw at wrong time
