@@ -55,43 +55,48 @@ namespace subscriptions {
     }
 
     static void draw(const int& width, const int& height) {
-        if (awaiting_refresh) {
+        if (awaiting_refresh)
             printf("loading...");
-            return;
-        } else if (no_subs) {
+        else if (no_subs)
             printf("sub list empty");
-            return;
-        } else if (videos.empty()) {
+        else if (videos.empty())
             printf("no videos found");
-            return;
-        }
+        else {
+            while (selected > height + scroll - 1)
+                scroll++;
+            while (selected < 0 + scroll)
+                scroll--;
 
-        while (selected > height + scroll)
-            scroll++;
-        while (selected < 0 + scroll)
-            scroll--;
+            int max = std::min(height + scroll, static_cast<int>(videos.size()));
+            for (int i = scroll; i < max; i++) {
+                const auto &video = videos[i];
 
-        int max = std::min(height + scroll, static_cast<int>(videos.size()));
-        for (int i = scroll; i < max; i++) {
-            const auto& video = videos[i];
+                if (i == selected) {
+                    terminal::set_background_color(terminal::e_color::white);
+                    terminal::set_text_color(terminal::e_color::black);
+                }
 
-            if (i == selected) {
-                terminal::set_background_color(terminal::e_color::white);
-                terminal::set_text_color(terminal::e_color::black);
-            }
+                std::string text = video.channel + " - " + video.title;
+                if (text.size() > width)
+                    text = text.substr(0, width - 3) + "...";
 
-            printf(video.title.c_str());
-            printf("\n");
+                printf(text.c_str());
+                if (i != max - 1)
+                    printf("\n");
 
-            if (i == selected) {
-                terminal::reset();
+                if (i == selected)
+                    terminal::reset();
             }
         }
 
         terminal::set_background_color(terminal::e_color::white);
         terminal::set_text_color(terminal::e_color::black);
 
-        const static std::string& binds = "[r] refresh";
+        std::string binds = "[q] quit [r] refresh";
+        if (binds.size() > width)
+            binds = binds.substr(0, width - 3) + "...";
+
+        printf("\n");
         printf(binds.c_str());
         for (int i = 0; i < width - binds.length(); i++)
             printf(" ");
