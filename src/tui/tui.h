@@ -16,7 +16,8 @@
 #include <thread>
 
 #include "terminal.h"
-#include "../subscriptions.h"
+#include "subscriptions.h"
+#include "search.h"
 
 namespace tui {
     namespace {
@@ -39,15 +40,19 @@ namespace tui {
                 char input;
                 read(0, &input, 1);
 
-                if (input == 'q')
+                if (!search && input == 'q')
                     exit = true;
                 else if (input == 9) { // tab
                     search = !search;
                     force_refresh = true;
-                }
-                else if (!search)
+                } else if (!search) {
                     if (subscriptions::handle_input(input))
                         force_refresh = true;
+
+                } else {
+                    if (search::handle_input(input))
+                        force_refresh = true;
+                }
             }
 
             term_old.c_lflag |= ICANON;
@@ -96,10 +101,13 @@ namespace tui {
             // draw title bar
             for (int i = 0; i < terminal_width - (search ? 6 : 13); i++)
                 printf(" ");
+
             terminal::reset();
 
             if (!search)
-                subscriptions::draw(terminal_width, terminal_height - 2);
+                subscriptions::draw(terminal_width, terminal_height - 1);
+            else
+                search::draw(terminal_width, terminal_height - 1);
 
             fflush(stdout);
         }

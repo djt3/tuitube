@@ -9,8 +9,8 @@
 #include <filesystem>
 #include <fstream>
 
-#include "invidious/video.h"
-#include "requests.h"
+#include "../invidious/video.h"
+#include "../requests.h"
 
 namespace subscriptions {
     namespace {
@@ -62,12 +62,12 @@ namespace subscriptions {
         else if (videos.empty())
             printf("no videos found");
         else {
-            while (selected > height + scroll - 1)
+            while (selected > height + scroll - 2)
                 scroll++;
-            while (selected < 0 + scroll)
+            while (selected < scroll)
                 scroll--;
 
-            int max = std::min(height + scroll, static_cast<int>(videos.size()));
+            int max = std::min(height + scroll - 1, static_cast<int>(videos.size()));
             for (int i = scroll; i < max; i++) {
                 const auto &video = videos[i];
 
@@ -92,7 +92,7 @@ namespace subscriptions {
         terminal::set_background_color(terminal::e_color::white);
         terminal::set_text_color(terminal::e_color::black);
 
-        std::string binds = "[q] quit [r] refresh";
+        std::string binds = "[tab] search [q] quit [r] refresh";
         if (binds.size() > width)
             binds = binds.substr(0, width - 3) + "...";
 
@@ -106,7 +106,7 @@ namespace subscriptions {
 
     // returns true if a refresh is required
     static bool handle_input(const char& input) {
-        if (input == 10) { // enter - open video
+        if (input == 10 && !videos.empty()) { // enter - open video
             std::string cmd = "mpv \"" + requests::extract_video_link(videos[selected]) + "\"";
             system(cmd.c_str());
             return true;
@@ -124,7 +124,7 @@ namespace subscriptions {
                 selected--;
             return true;
         } else if (input == 66) { // down
-            if (selected < videos.size())
+            if (selected < videos.size() - 1)
                 selected++;
             return true;
         }
