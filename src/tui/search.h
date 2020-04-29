@@ -5,6 +5,8 @@
 #ifndef TUITUBE_SEARCH_H
 #define TUITUBE_SEARCH_H
 
+#include "utils.h"
+
 namespace search {
     namespace {
         static bool searched = false;
@@ -29,19 +31,11 @@ namespace search {
     }
 
     static void draw(const int& width, const int& height) {
-        // draw title bar
-        terminal::set_background_color(terminal::e_color::white);
-        terminal::set_text_color(terminal::e_color::black);
+        if (!searched)
+            tui::utils::print_title("search", width);
+        else
+            tui::utils::print_title("search - " + search_text, width);
 
-        std::string title = "search";
-        if (searched)
-            title += " - " + search_text;
-        printf(title.c_str());
-
-        for (int i = 0; i < width - title.size(); i++)
-            printf(" ");
-
-        terminal::reset();
 
         if (awaiting_refresh)
             printf("loading...");
@@ -58,7 +52,7 @@ namespace search {
             text += "]";
             printf(text.c_str());
 
-            for (; i < height; i++)
+            for (; i < height - 1; i++)
                 printf("\n");
         } else {
             while (selected > height + scroll - 2)
@@ -66,46 +60,17 @@ namespace search {
             while (selected < scroll)
                 scroll--;
 
-            int max = std::min(height + scroll, static_cast<int>(videos.size()));
-            for (int i = scroll; i < max; i++) {
-                const auto &video = videos[i];
-
-                if (i == selected) {
-                    terminal::set_background_color(terminal::e_color::white);
-                    terminal::set_text_color(terminal::e_color::black);
-                }
-
-                std::string text = video.channel + " - " + video.title;
-                if (text.size() > width)
-                    text = text.substr(0, width - 3) + "...";
-
-                printf(text.c_str());
-                if (i != max - 1)
-                    printf("\n");
-
-                if (i == selected)
-                    terminal::reset();
-            }
+            tui::utils::print_videos(videos, selected, width, height, scroll);
         }
+
 
         terminal::set_background_color(terminal::e_color::white);
         terminal::set_text_color(terminal::e_color::black);
 
-        std::string binds;
         if (searched)
-            binds = "[tab] subscriptions [q] quit [s] show searchbox";
+            tui::utils::print_footer("[tab] subscriptions [s] show searchbox", width);
         else
-            binds = "[tab] subscriptions [enter] search";
-
-        if (binds.size() > width)
-            binds = binds.substr(0, width - 3) + "...";
-
-        printf("\n");
-        printf(binds.c_str());
-        for (int i = 0; i < width - binds.length(); i++)
-            printf(" ");
-
-        terminal::reset();
+            tui::utils::print_footer("[tab] subscriptions [enter] search", width);
     }
 
     // returns true if a refresh is required TODO: arrow keys for input

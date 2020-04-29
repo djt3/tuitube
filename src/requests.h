@@ -74,7 +74,7 @@ namespace requests {
             else if (response[space_index + 1] == 'y') // years
                 mult = 217728000;
 
-            try {
+            try { // can fail if there is a playlist / mix / channel TODO: return a separate vector if wanted
                 video.time = std::stoi(response.substr(0, space_index)) * mult;
             }
             catch (...) {
