@@ -8,10 +8,12 @@
 #include <thread>
 #include <filesystem>
 #include <fstream>
+#include <mutex>
 
 #include "../invidious/video.h"
 #include "../requests.h"
 #include "utils.h"
+
 
 namespace subscriptions {
     namespace {
@@ -38,7 +40,7 @@ namespace subscriptions {
             std::string line;
             std::ifstream sub_file(path);
             while (std::getline(sub_file, line)) {
-                auto channel_vids = requests::extract_videos(line);
+                auto channel_vids = requests::extract_videos("/channel/" + line);
                 if (channel_vids.empty())
                     continue;
 
@@ -56,6 +58,9 @@ namespace subscriptions {
     }
 
     static void draw(const int& width, const int& height) {
+				static std::once_flag flag;
+				std::call_once(flag, [](){ refresh_subs(); });
+
         tui::utils::print_title("subscriptions", width);
 
         if (awaiting_refresh)
@@ -79,7 +84,7 @@ namespace subscriptions {
     // returns true if a refresh is required
     static bool handle_input(const char& input) {
         if (input == 10 && !videos.empty()) { // enter - open video
-            std::string cmd = "mpv \"" + requests::extract_video_link(videos[selected]) + "\"";
+            std::string cmd = "youtube-dl -o - \"" + requests::extract_video_link(videos[selected]) + "\" | mpv -";
             system(cmd.c_str());
             return true;
         }

@@ -39,15 +39,21 @@ namespace requests {
             if (index == std::string::npos)
                 break;
 
+						// find url
             response = response.substr(index + 12);
             index = response.find('\"');
             invidious::c_video video;
             video.url = response.substr(0, index);
 
+						// find title
             response = response.substr(index + 2);
             index = response.find('<');
             video.title = response.substr(0, index);;
 
+						// find channel url
+						index = response.find("href=");
+
+						// find channel name
             index = response.find("\">");
             response = response.substr(index + 2);
             index = response.find('<');
