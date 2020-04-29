@@ -74,7 +74,12 @@ namespace requests {
             else if (response[space_index + 1] == 'y') // years
                 mult = 217728000;
 
-            video.time = std::stoi(response.substr(0, space_index)) * mult;
+            try {
+                video.time = std::stoi(response.substr(0, space_index)) * mult;
+            }
+            catch (...) {
+                continue;
+            }
 
             videos.push_back(video);
         }

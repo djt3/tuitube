@@ -94,15 +94,6 @@ namespace tui {
                 continue;
 
             terminal::clear();
-            terminal::set_background_color(terminal::e_color::white);
-            terminal::set_text_color(terminal::e_color::black);
-            printf((search ? "search" : "subscriptions"));
-
-            // draw title bar
-            for (int i = 0; i < terminal_width - (search ? 6 : 13); i++)
-                printf(" ");
-
-            terminal::reset();
 
             if (!search)
                 subscriptions::draw(terminal_width, terminal_height - 1);

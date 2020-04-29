@@ -29,6 +29,20 @@ namespace search {
     }
 
     static void draw(const int& width, const int& height) {
+        // draw title bar
+        terminal::set_background_color(terminal::e_color::white);
+        terminal::set_text_color(terminal::e_color::black);
+
+        std::string title = "search";
+        if (searched)
+            title += " - " + search_text;
+        printf(title.c_str());
+
+        for (int i = 0; i < width - title.size(); i++)
+            printf(" ");
+
+        terminal::reset();
+
         if (awaiting_refresh)
             printf("loading...");
         else if (!searched) {
