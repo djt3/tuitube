@@ -20,4 +20,4 @@ What's planned:
 How to add subscriptions:
 The file is at "~/.config/tuitube_subs", add as "/channel/{channel id / name}" one per line. To use, run the binary file after building and press "r" to refresh the subscriptions.
 
-![Screenshot](https://github.com/djt3/tuitube/blob/master/Screenshot_20200428_233430.png?raw=true)
+![Screenshot](https://github.com/djt3/tuitube/blob/master/tuitube.png?raw=true)
