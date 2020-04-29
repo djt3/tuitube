@@ -8,9 +8,11 @@ Very much still a work in progress. Build with cmake. Dependancies:
 What's working:
 - Subscriptions page
 - Opening videos
+- Searching for videos
 
 What's planned:
-- Search
+- Popular / trending page
+- Include channel results in search
 - Browsing channels
 - Suggested videos
 - An easier way to add subscriptions
