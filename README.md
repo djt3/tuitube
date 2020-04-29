@@ -3,7 +3,7 @@ minimal tui youtube (invidious) frontend made in c++
 
 Very much still a work in progress. Build with cmake. Dependancies:
 - mpv
-- libcurlpp
+- curlpp
 
 What's working:
 - Subscriptions page
