@@ -20,6 +20,9 @@ What's planned:
 - Browsing channels
 - Suggested videos
 
+Known bugs:
+- Subscibed channels saved with a custom url need to be manually removed from ~/.config/tuitube_subs
+
 How to add subscriptions:
 The file is at "~/.config/tuitube_subs", add as "{channel id / name}" from the channel url, with one per line. To use, run the binary file after building and press "r" to refresh the subscriptions.
 
