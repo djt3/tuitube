@@ -19,6 +19,7 @@ namespace subscriptions {
     namespace {
         static bool awaiting_refresh = false;
         static bool no_subs = false;
+        static bool request_update = false;
         static int selected = 0;
         static int scroll = 0;
         static std::vector<invidious::c_video> videos;
@@ -81,7 +82,17 @@ namespace subscriptions {
             std::sort(videos.begin(), videos.end(), sort_fn);
 
             awaiting_refresh = false;
+            request_update = true;
         }
+    }
+
+    static bool is_update_required() {
+        if (request_update) {
+            request_update = false;
+            return true;
+        }
+
+        return false;
     }
 
     static void draw(const int& width, const int& height) {
@@ -111,36 +122,31 @@ namespace subscriptions {
         tui::utils::print_footer("[tab] search [q] quit [r] refresh [d] delete sub", width);
     }
 
-    // returns true if a refresh is required
-    static bool handle_input(const char& input) {
-        if (input == 10 && !videos.empty()) { // enter - open video
-            terminal::clear();
-            printf("playing video...\n");
+    static void handle_input(const char& input) {
+        request_update = true;
 
-            std::string cmd =
-                    config::playcmd_start + requests::extract_video_link(videos[selected]) + config::playcmd_end;
+        if (input == 10 && !videos.empty()) { // enter - open video
+            request_update = false;
+            terminal::clear();
+
+            printf("playing video...\n");
+            std::string cmd = config::playcmd_start + requests::extract_video_link(videos[selected]) + config::playcmd_end;
             system(cmd.c_str());
-            return true;
         } else if (input == 'r' && !awaiting_refresh) { // r - refresh
             if (!awaiting_refresh) {
                 std::thread refresh_thread(refresh_subs);
                 refresh_thread.detach();
             }
-            return true;
         } else if (input == 'd' && !awaiting_refresh && !videos.empty()) {
             write_subs(true);
-            return true;
         } else if (input == 65) { // up
             if (selected > 0)
                 selected--;
-            return true;
         } else if (input == 66) { // down
             if (selected < videos.size() - 1)
                 selected++;
-            return true;
-        }
-
-        return false;
+        } else
+            request_update = false;
     }
 }
 

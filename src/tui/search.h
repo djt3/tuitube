@@ -13,7 +13,8 @@ namespace search {
     namespace {
         static bool searched = false;
         static std::string search_text = "";
-        static bool awaiting_refresh = false;
+        static bool awaiting_search = false;
+        static bool request_update = false;
         static int selected = 0;
         static int scroll = 0;
         static std::vector<invidious::c_video> videos;
@@ -21,14 +22,15 @@ namespace search {
         static void do_search() {
             videos.clear();
 
-            awaiting_refresh = true;
+            awaiting_search = true;
 
             std::string search_url = "/search?q=" + search_text;
             std::replace(search_url.begin(), search_url.end(), ' ', '+');
 
             videos = requests::extract_videos(search_url);
 
-            awaiting_refresh = false;
+            awaiting_search = false;
+            request_update = true;
         }
 
         static void add_sub() {
@@ -41,6 +43,15 @@ namespace search {
         }
     }
 
+    static bool is_update_required() {
+        if (request_update) {
+            request_update = false;
+            return true;
+        }
+
+        return false;
+    }
+
     static void draw(const int& width, const int& height) {
         if (!searched)
             tui::utils::print_title("search", width);
@@ -48,7 +59,7 @@ namespace search {
             tui::utils::print_title("search - " + search_text, width);
 
 
-        if (awaiting_refresh)
+        if (awaiting_search)
             printf("loading...");
         else if (!searched) {
             int i;
@@ -84,38 +95,39 @@ namespace search {
             tui::utils::print_footer("[tab] subscriptions [enter] search", width);
     }
 
-    // returns true if a refresh is required TODO: arrow keys for input
-    static bool handle_input(const char& input) {
+    // TODO: arrow keys for input
+    static void handle_input(const char& input) {
+        request_update = true;
+
         if (searched) {
             if (input == 10 && !videos.empty()) { // enter
+                request_update = false;
                 terminal::clear();
+
                 printf("playing video...\n");
                 std::string cmd = config::playcmd_start + requests::extract_video_link(videos[selected]) + config::playcmd_end;
                 system(cmd.c_str());
-                return true;
             } else if (input == 'a' && !videos.empty()) {
                 add_sub();
-                return true;
             }
             else if (input == 's') {
-                awaiting_refresh = false;
+                awaiting_search = false;
                 searched = false;
                 search_text = ""; // maybe dont reset this
                 scroll = 0;
-                return true;
             }  else if (input == 65) { // up
                 if (selected > 0)
                     selected--;
-                return true;
             } else if (input == 66) { // down
                 if (selected < videos.size() - 1)
                     selected++;
-                return true;
             }
+            else
+                request_update = false;
         } else {
             if (input == 10 && !search_text.empty()) {
                 searched = true;
-                awaiting_refresh = true;
+                awaiting_search = true;
                 std::thread search_thread(do_search);
                 search_thread.detach();
             } else if (input == 127) {
@@ -123,10 +135,7 @@ namespace search {
                     search_text = search_text.substr(0, search_text.size() - 1);
             } else
                 search_text += input;
-            return true;
         }
-
-        return false;
     }
 }
 
