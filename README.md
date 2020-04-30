@@ -17,6 +17,7 @@ What's planned:
 - Include channel / playlist / mix results in search
 - Suggested videos
 - Auto invidious instance selector
+- Fixing symbols in video titles
 
 Known bugs:
 - None, please report any you find :)
