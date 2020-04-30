@@ -1,1 +1,0 @@
-/usr/bin/c++   -pthread  -rdynamic CMakeFiles/tuitube.dir/main.o  -o tuitube  -lcurlpp -Wl,-O1,--sort-common,--as-needed,-z,relro,-z,now -lcurl 

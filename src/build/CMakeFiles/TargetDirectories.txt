@@ -1,3 +1,0 @@
-/home/dan/tuitube/src/build/CMakeFiles/rebuild_cache.dir
-/home/dan/tuitube/src/build/CMakeFiles/tuitube.dir
-/home/dan/tuitube/src/build/CMakeFiles/edit_cache.dir
