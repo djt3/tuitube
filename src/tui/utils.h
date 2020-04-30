@@ -25,20 +25,6 @@ namespace tui::utils {
             for (int i = 0; i < width - formatted_title.length(); i++)
                 printf(" "); // formatted_title += adds the incorrect number?
 
-
-            /*std::string formatted_title = title;
-            if (extra == "")
-                formatted_title += " - " + extra;
-
-            if (formatted_title.size() > width)
-                formatted_title = formatted_title.substr(0, width - 3) + "...";
-            else {
-                for (int i = 0; i < width - formatted_title.size(); i++)
-                    title(" ");
-            }
-
-            printf(formatted_title.c_str());*/
-
             terminal::reset();
         }
 

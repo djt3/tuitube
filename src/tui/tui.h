@@ -16,8 +16,9 @@
 #include <thread>
 
 #include "terminal.h"
-#include "subscriptions.h"
-#include "search.h"
+#include "tabs/subscriptions.h"
+#include "tabs/search.h"
+#include "tabs/popular.h"
 
 namespace tui {
     namespace {
@@ -27,6 +28,7 @@ namespace tui {
 
         enum class e_tab_page : int {
             subs = 0,
+            popular,
             search,
             max
         };
@@ -56,9 +58,11 @@ namespace tui {
                     force_update = true;
                 }
                 else if (current_tab == e_tab_page::subs)
-                    subscriptions::handle_input(input);
+                    tabs::subscriptions::handle_input(input);
+                else if (current_tab == e_tab_page::popular)
+                    tabs::popular::handle_input(input);
                 else if (current_tab == e_tab_page::search)
-                    search::handle_input(input);
+                    tabs::search::handle_input(input);
             }
 
             term_old.c_lflag |= ICANON;
@@ -87,8 +91,9 @@ namespace tui {
 
             if (force_update)
                 force_update = false;
-            else if(current_tab == e_tab_page::search && search::is_update_required());
-            else if(current_tab == e_tab_page::subs && subscriptions::is_update_required());
+            else if(current_tab == e_tab_page::search && tabs::search::is_update_required());
+            else if(current_tab == e_tab_page::popular && tabs::popular::is_update_required());
+            else if(current_tab == e_tab_page::subs && tabs::subscriptions::is_update_required());
             else if (terminal_width != old_terminal_width) {
                 old_terminal_width = terminal_width;
                 redraw_required = true;
@@ -102,9 +107,11 @@ namespace tui {
             terminal::clear();
 
             if (current_tab == e_tab_page::search)
-                search::draw(terminal_width, terminal_height - 1);
+                tabs::search::draw(terminal_width, terminal_height - 1);
+            else if (current_tab == e_tab_page::popular)
+                tabs::popular::draw(terminal_width, terminal_height - 1);
             else if (current_tab == e_tab_page::subs)
-                subscriptions::draw(terminal_width, terminal_height - 1);
+                tabs::subscriptions::draw(terminal_width, terminal_height - 1);
 
             fflush(stdout);
         }

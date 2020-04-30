@@ -7,9 +7,9 @@
 
 #include <fstream>
 
-#include "utils.h"
+#include "../utils.h"
 
-namespace search {
+namespace tui::tabs::search {
     namespace {
         static bool searched = false;
         static std::string search_text = "";
@@ -34,16 +34,7 @@ namespace search {
             request_update = true;
         }
 
-        static void add_sub() {
-            const static std::string path = std::string(getenv("HOME")) + "/.config/tuitube_subs";
 
-            std::ofstream file;
-            file.open(path.c_str(), std::ios_base::app);
-            file << std::endl << videos[selected].channel_url;
-            file.close();
-
-            last_action = "subscribed to " + videos[selected].channel_url;
-        }
     }
 
     static bool is_update_required() {
@@ -51,7 +42,6 @@ namespace search {
             request_update = false;
             return true;
         }
-
         return false;
     }
 
@@ -60,7 +50,6 @@ namespace search {
             tui::utils::print_title("search", width , last_action);
         else
             tui::utils::print_title("search - " + search_text, width, last_action);
-
 
         if (awaiting_search)
             printf("loading...");
@@ -93,9 +82,9 @@ namespace search {
         terminal::set_text_color(terminal::e_color::black);
 
         if (searched)
-            tui::utils::print_footer("[tab] subscriptions [s] show searchbox [a] subscribe", width);
+            tui::utils::print_footer("[tab] change tab [s] show searchbox [a] subscribe", width);
         else
-            tui::utils::print_footer("[tab] subscriptions [enter] search", width);
+            tui::utils::print_footer("[tab] change tab [enter] search", width);
     }
 
     // TODO: arrow keys for input
@@ -114,22 +103,21 @@ namespace search {
                                   + config::playcmd_end;
                 system(cmd.c_str());
             } else if (input == 'a' && !videos.empty()) {
-                add_sub();
-            }
-            else if (input == 's') {
+                subscriptions::add_sub(videos[selected]);
+                last_action = "subscribed to " + videos[selected].channel_url;
+            } else if (input == 's') {
                 awaiting_search = false;
                 searched = false;
                 search_text = ""; // maybe don't reset this
                 last_action = "";
                 scroll = 0;
-            }  else if (input == 65) { // up
+            } else if (input == 65) { // up
                 if (selected > 0)
                     selected--;
             } else if (input == 66) { // down
                 if (selected < videos.size() - 1)
                     selected++;
-            }
-            else
+            } else
                 request_update = false;
         } else {
             if (input == 10 && !search_text.empty()) {

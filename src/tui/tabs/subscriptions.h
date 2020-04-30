@@ -10,12 +10,12 @@
 #include <fstream>
 #include <mutex>
 
-#include "../invidious/video.h"
-#include "../requests.h"
-#include "../config.h"
-#include "utils.h"
+#include "../../invidious/video.h"
+#include "../../requests.h"
+#include "../../config.h"
+#include "../utils.h"
 
-namespace subscriptions {
+namespace tui::tabs::subscriptions {
     namespace {
         static bool request_update = false;
         static int selected = 0;
@@ -69,7 +69,6 @@ namespace subscriptions {
             }
 
             last_action = "refreshing...";
-            videos.clear();
 
             // cleans up duplicated and empty lines in the subs file
             if (refresh_subs_file())
@@ -113,8 +112,14 @@ namespace subscriptions {
             request_update = false;
             return true;
         }
-
         return false;
+    }
+
+    static void add_sub(const invidious::c_video& video) {
+        std::ofstream file;
+        file.open(subs_file_path.c_str(), std::ios_base::app);
+        file << std::endl << video.channel_url;
+        file.close();
     }
 
     static void draw(const int &width, const int &height) {
@@ -126,7 +131,6 @@ namespace subscriptions {
 
         tui::utils::print_title("subscriptions", width, last_action);
 
-
         if (!videos.empty()) {
             while (selected > height + scroll - 2)
                 scroll++;
@@ -136,7 +140,7 @@ namespace subscriptions {
             tui::utils::print_videos(videos, selected, width, height, scroll);
         }
 
-        tui::utils::print_footer("[tab] search [q] quit [r] refresh [d] unsubscribe", width);
+        tui::utils::print_footer("[tab] change tab [q] quit [r] refresh [d] unsubscribe", width);
     }
 
     static void handle_input(const char &input) {
