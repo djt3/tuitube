@@ -60,7 +60,6 @@ namespace subscriptions {
             refresh_subs_file();
         }
 
-        // TODO: implement threading
         static void refresh_videos() {
             videos.clear();
 
@@ -137,7 +136,7 @@ namespace subscriptions {
             tui::utils::print_videos(videos, selected, width, height, scroll);
         }
 
-        tui::utils::print_footer("[tab] search [q] quit [r] refresh [d] delete channel", width);
+        tui::utils::print_footer("[tab] search [q] quit [r] refresh [d] unsubscribe", width);
     }
 
     static void handle_input(const char &input) {

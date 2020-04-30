@@ -93,7 +93,7 @@ namespace search {
         terminal::set_text_color(terminal::e_color::black);
 
         if (searched)
-            tui::utils::print_footer("[tab] subscriptions [s] show searchbox [a] add subscription", width);
+            tui::utils::print_footer("[tab] subscriptions [s] show searchbox [a] subscribe", width);
         else
             tui::utils::print_footer("[tab] subscriptions [enter] search", width);
     }
