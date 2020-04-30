@@ -25,6 +25,6 @@ Known bugs:
 How to add subscriptions:
 The file is at "~/.config/tuitube_subs", add as "{channel id / name}" from the channel url, with one per line. To use, run the binary file after building and press "r" to refresh the subscriptions.
 
-If your mpv can't play web links, apply the config_ytdl.patch file before building or check the comments in config.h (note, requires youtube-dl).
+If your mpv can't play web links, check the comments in config.h (note, requires youtube-dl).
 
 ![Screenshot](https://github.com/djt3/tuitube/blob/master/tuitube.png?raw=true)
