@@ -6,7 +6,7 @@
 #define TUITUBE_CONFIG_H
 
 namespace config{
-    const static std::string invidious_instance = "https://invidio.us";
+    const static std::string invidious_instance = "https://invidious.snopyta.org";
 
     // most systems are fine calling mpv {url} but yt-dl for max compatibility
     const static std::string playcmd_start = "youtube-dl -o - \"";

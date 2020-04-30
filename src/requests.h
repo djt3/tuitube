@@ -28,7 +28,8 @@ namespace requests {
         }
     }
 
-    std::vector<invidious::c_video> extract_videos(const std::string& url) {
+    std::vector<invidious::c_video> extract_videos(const std::string& url,
+            const std::string& override_channel_url = "") {
         std::string full_url = config::invidious_instance + url;
         std::string response = make_request(full_url);
 
@@ -49,10 +50,14 @@ namespace requests {
             index = response.find('<');
             video.title = response.substr(0, index);;
 
-            index = response.find("channel/");
-            response = response.substr(index + 8);
-            index = response.find('\"');
-            video.channel_url = response.substr(0, index);
+            if (override_channel_url == "") {
+                index = response.find("channel/");
+                response = response.substr(index + 8);
+                index = response.find('\"');
+                video.channel_url = response.substr(0, index);
+            } else {
+                video.channel_url = override_channel_url;
+            }
 
             index = response.find("\">");
             response = response.substr(index + 2);

@@ -13,6 +13,7 @@ namespace search {
     namespace {
         static bool searched = false;
         static std::string search_text = "";
+        static std::string last_action = "";
         static bool awaiting_search = false;
         static bool request_update = false;
         static int selected = 0;
@@ -40,6 +41,8 @@ namespace search {
             file.open(path.c_str(), std::ios_base::app);
             file << std::endl << videos[selected].channel_url;
             file.close();
+
+            last_action = "subscribed to " + videos[selected].channel_url;
         }
     }
 
@@ -54,9 +57,9 @@ namespace search {
 
     static void draw(const int& width, const int& height) {
         if (!searched)
-            tui::utils::print_title("search", width);
+            tui::utils::print_title("search", width , last_action);
         else
-            tui::utils::print_title("search - " + search_text, width);
+            tui::utils::print_title("search - " + search_text, width, last_action);
 
 
         if (awaiting_search)
@@ -105,7 +108,10 @@ namespace search {
                 terminal::clear();
 
                 printf("playing video...\n");
-                std::string cmd = config::playcmd_start + requests::extract_video_link(videos[selected]) + config::playcmd_end;
+                last_action = "played " + videos[selected].title;
+                std::string cmd = config::playcmd_start
+                                  + requests::extract_video_link(videos[selected])
+                                  + config::playcmd_end;
                 system(cmd.c_str());
             } else if (input == 'a' && !videos.empty()) {
                 add_sub();
@@ -113,7 +119,8 @@ namespace search {
             else if (input == 's') {
                 awaiting_search = false;
                 searched = false;
-                search_text = ""; // maybe dont reset this
+                search_text = ""; // maybe don't reset this
+                last_action = "";
                 scroll = 0;
             }  else if (input == 65) { // up
                 if (selected > 0)

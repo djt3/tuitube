@@ -7,25 +7,43 @@
 
 #include "../invidious/video.h"
 
-namespace tui {
-    namespace utils {
-        static void print_title(const std::string& title, int width) {
+namespace tui::utils {
+        static void print_title(const std::string& title, int width, const std::string& extra = "") {
             terminal::set_background_color(terminal::e_color::white);
             terminal::set_text_color(terminal::e_color::black);
 
-            if (title.size() > width)
-                printf(title.substr(0, width - 3).c_str(), "...");
-            else {
-                printf(title.c_str());
+            std::string formatted_title = title;
 
-                for (int i = 0; i < width - title.size(); i++)
-                    printf(" ");
+            if (!extra.empty())
+                formatted_title = formatted_title + " - " + extra; // += doesn't work?
+
+            if (formatted_title.size() > width)
+                formatted_title = formatted_title.substr(0, width - 3) + "...";
+
+            printf(formatted_title.c_str());
+
+            for (int i = 0; i < width - formatted_title.length(); i++)
+                printf(" "); // formatted_title += adds the incorrect number?
+
+
+            /*std::string formatted_title = title;
+            if (extra == "")
+                formatted_title += " - " + extra;
+
+            if (formatted_title.size() > width)
+                formatted_title = formatted_title.substr(0, width - 3) + "...";
+            else {
+                for (int i = 0; i < width - formatted_title.size(); i++)
+                    title(" ");
             }
+
+            printf(formatted_title.c_str());*/
 
             terminal::reset();
         }
 
-        static void print_videos(const std::vector<invidious::c_video>& videos, int selected, int width, int height, int scroll) {
+        static void print_videos(const std::vector<invidious::c_video>& videos,
+                int selected, int width, int height, int scroll) {
             int max = std::min(height + scroll - 1, static_cast<int>(videos.size()));
             for (int i = scroll; i < max; i++) {
                 const auto &video = videos[i];
@@ -66,6 +84,5 @@ namespace tui {
             terminal::reset();
         }
     }
-}
 
 #endif //TUITUBE_UTILS_H
