@@ -76,14 +76,23 @@ namespace subscriptions {
             if (refresh_subs_file())
                 write_subs();
 
-            for (const auto& channel : channels) {
-                auto channel_vids = requests::extract_videos("/channel/" + channel, channel);
-                if (channel_vids.empty())
-                    continue;
+						std::vector<std::thread> threads { };
 
-                videos.insert(videos.end(), channel_vids.begin(), channel_vids.end());
-                request_update = true;
+            for (const auto& channel : channels) {
+								auto scrape_fn = [=]() {
+										auto channel_vids = requests::extract_videos("/channel/" + channel, channel);
+										if (channel_vids.empty())
+												return;
+
+										videos.insert(videos.end(), channel_vids.begin(), channel_vids.end());
+										request_update = true;
+								};
+								
+								threads.push_back(std::thread(scrape_fn));
             }
+
+						for (auto& thread : threads)
+							thread.join();
 
             if (videos.empty()) {
                 last_action = "no videos found";
