@@ -14,16 +14,15 @@ What's working:
 - Changing invidious instance (config.h, needs recompile)
 
 What's planned:
-- Popular / trending page
 - Include channel / playlist / mix results in search
-- Browsing channels
 - Suggested videos
+- Auto invidious instance selector
 
 Known bugs:
 - None, please report any you find :)
 
-How to add subscriptions:
-The file is at "~/.config/tuitube_subs", add as "{channel id / name}" from the channel url, with one per line. To use, run the binary file after building and press "r" to refresh the subscriptions.
+How to change subscriptions manually:
+The file is at "~/.config/tuitube_subs", add as "{channel id / name}" from the channel url, with one per line.
 
 If your mpv can't play web links, check the comments in config.h (note, requires youtube-dl).
 
