@@ -5,13 +5,16 @@
 #ifndef TUITUBE_CONFIG_H
 #define TUITUBE_CONFIG_H
 
-namespace config{
-    const static std::string invidious_instance = "https://invidious.snopyta.org";
+namespace config {
+    const static std::string invidious_instance = "https://invidio.us";
 
-    // most systems are fine calling mpv {url} but yt-dl for max compatibility
-    const static std::string playcmd_start = "youtube-dl -o - \"";
+    // use these if your mpv cant play web videos
+    // const static std::string playcmd_start = "youtube-dl -o - \"";
+    // const static std::string playcmd_end = "\" | mpv -";
+
+    const static std::string playcmd_start = "mpv \"";
     // url is placed in middle
-    const static std::string playcmd_end = "\" | mpv -";
+    const static std::string playcmd_end = "\"";
 }
 
 #endif //TUITUBE_CONFIG_H
