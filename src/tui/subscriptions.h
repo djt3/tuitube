@@ -24,6 +24,20 @@ namespace subscriptions {
         static std::vector<invidious::c_video> videos;
         static std::vector<std::string> subs;
 
+        static void write_subs(bool delete_current = false) {
+            const static std::string path = std::string(getenv("HOME")) + "/.config/tuitube_subs";
+
+            std::ofstream file;
+            file.open(path.c_str());
+
+            for (const auto& channel : subs) {
+                if (!delete_current || channel != videos[selected].channel_url)
+                    file << channel << std::endl;
+            }
+
+            file.close();
+        }
+
         // TODO: implement threading
         static void refresh_subs() {
             videos.clear();
@@ -40,9 +54,14 @@ namespace subscriptions {
             videos.clear();
             subs.clear();
 
+            bool found_duplicate = false;
             std::string line;
             std::ifstream sub_file(path);
             while (std::getline(sub_file, line)) {
+                if (line == "" || std::find(subs.begin(), subs.end(), line) != subs.end()) {
+                    found_duplicate = true;
+                    continue;
+                }
                 subs.push_back(line);
                 auto channel_vids = requests::extract_videos("/channel/" + line);
                 if (channel_vids.empty())
@@ -52,29 +71,16 @@ namespace subscriptions {
                 videos.insert(videos.end(), channel_vids.begin(), channel_vids.end());
             }
 
+            // cleanup subs file
+            if (found_duplicate)
+                write_subs();
+
             auto sort_fn = [](const invidious::c_video &v1, const invidious::c_video &v2) {
                 return v1.time < v2.time;
             };
             std::sort(videos.begin(), videos.end(), sort_fn);
 
             awaiting_refresh = false;
-        }
-
-        static void delete_sub() {
-            const static std::string path = std::string(getenv("HOME")) + "/.config/tuitube_subs";
-
-            std::ofstream file;
-            file.open(path.c_str());
-
-            for (const auto& channel : subs) {
-                if (channel != videos[selected].channel_url)
-                    file << channel << std::endl;
-            }
-
-            file.close();
-
-            std::thread refresh_thread(refresh_subs);
-            refresh_thread.detach();
         }
     }
 
@@ -111,7 +117,8 @@ namespace subscriptions {
             terminal::clear();
             printf("playing video...\n");
 
-            std::string cmd = config::playcmd_start + requests::extract_video_link(videos[selected]) + config::playcmd_end;
+            std::string cmd =
+                    config::playcmd_start + requests::extract_video_link(videos[selected]) + config::playcmd_end;
             system(cmd.c_str());
             return true;
         } else if (input == 'r' && !awaiting_refresh) { // r - refresh
@@ -121,7 +128,7 @@ namespace subscriptions {
             }
             return true;
         } else if (input == 'd' && !awaiting_refresh && !videos.empty()) {
-            delete_sub();
+            write_subs(true);
             return true;
         } else if (input == 65) { // up
             if (selected > 0)
