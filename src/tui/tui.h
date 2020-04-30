@@ -22,9 +22,15 @@
 namespace tui {
     namespace {
         static bool exit = false;
-        static bool search = false;
         static bool input_lock = false; // play is called in input loop, prevent refresh to show buffering
         static bool force_update = false;
+
+        enum class e_tab_page : int {
+            subs = 0,
+            search,
+            max
+        };
+        static e_tab_page current_tab = e_tab_page::subs;
 
         void input_loop() {
             static struct termios term_old = {0};
@@ -41,15 +47,17 @@ namespace tui {
                 char input;
                 read(0, &input, 1);
 
-                if (!search && input == 'q')
+                if (current_tab == e_tab_page::subs && input == 'q')
                     exit = true;
                 else if (input == 9) { // tab
-                    search = !search;
+                    current_tab = static_cast<e_tab_page>((static_cast<int>(current_tab) + 1) %
+                            static_cast<int>(e_tab_page::max));
+
                     force_update = true;
                 }
-                else if (!search)
+                else if (current_tab == e_tab_page::subs)
                     subscriptions::handle_input(input);
-                else
+                else if (current_tab == e_tab_page::search)
                     search::handle_input(input);
             }
 
@@ -79,8 +87,8 @@ namespace tui {
 
             if (force_update)
                 force_update = false;
-            else if(search && search::is_update_required());
-            else if(!search && subscriptions::is_update_required());
+            else if(current_tab == e_tab_page::search && search::is_update_required());
+            else if(current_tab == e_tab_page::subs && subscriptions::is_update_required());
             else if (terminal_width != old_terminal_width) {
                 old_terminal_width = terminal_width;
                 redraw_required = true;
@@ -93,10 +101,10 @@ namespace tui {
 
             terminal::clear();
 
-            if (!search)
-                subscriptions::draw(terminal_width, terminal_height - 1);
-            else
+            if (current_tab == e_tab_page::search)
                 search::draw(terminal_width, terminal_height - 1);
+            else if (current_tab == e_tab_page::subs)
+                subscriptions::draw(terminal_width, terminal_height - 1);
 
             fflush(stdout);
         }
