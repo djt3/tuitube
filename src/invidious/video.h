@@ -10,6 +10,7 @@ namespace invidious {
     public:
         std::string title;
         std::string channel;
+        std::string channel_url;
         std::string url;
         uint64_t time;
     };

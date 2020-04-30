@@ -26,7 +26,7 @@ namespace tui {
         }
 
         static void print_videos(const std::vector<invidious::c_video>& videos, int selected, int width, int height, int scroll) {
-            int max = std::min(height + scroll, static_cast<int>(videos.size()));
+            int max = std::min(height + scroll - 1, static_cast<int>(videos.size()));
             for (int i = scroll; i < max; i++) {
                 const auto &video = videos[i];
 

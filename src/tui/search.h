@@ -5,6 +5,8 @@
 #ifndef TUITUBE_SEARCH_H
 #define TUITUBE_SEARCH_H
 
+#include <fstream>
+
 #include "utils.h"
 
 namespace search {
@@ -27,6 +29,15 @@ namespace search {
             videos = requests::extract_videos(search_url);
 
             awaiting_refresh = false;
+        }
+
+        static void add_sub() {
+            const static std::string path = std::string(getenv("HOME")) + "/.config/tuitube_subs";
+
+            std::ofstream file;
+            file.open(path.c_str(), std::ios_base::app);
+            file << std::endl << videos[selected].channel_url;
+            file.close();
         }
     }
 
@@ -68,7 +79,7 @@ namespace search {
         terminal::set_text_color(terminal::e_color::black);
 
         if (searched)
-            tui::utils::print_footer("[tab] subscriptions [s] show searchbox", width);
+            tui::utils::print_footer("[tab] subscriptions [s] show searchbox [a] add subscription", width);
         else
             tui::utils::print_footer("[tab] subscriptions [enter] search", width);
     }
@@ -77,17 +88,22 @@ namespace search {
     static bool handle_input(const char& input) {
         if (searched) {
             if (input == 10 && !videos.empty()) { // enter
-                std::string cmd = "mpv \"" + requests::extract_video_link(videos[selected]) + "\"";
+                terminal::clear();
+                printf("playing video...\n");
+                std::string cmd = config::playcmd_start + requests::extract_video_link(videos[selected]) + config::playcmd_end;
                 system(cmd.c_str());
                 return true;
+            } else if (input == 'a' && !videos.empty()) {
+                add_sub();
+                return true;
             }
-            if (input == 's') {
+            else if (input == 's') {
                 awaiting_refresh = false;
                 searched = false;
                 search_text = ""; // maybe dont reset this
                 scroll = 0;
                 return true;
-            } else if (input == 65) { // up
+            }  else if (input == 65) { // up
                 if (selected > 0)
                     selected--;
                 return true;
@@ -97,10 +113,11 @@ namespace search {
                 return true;
             }
         } else {
-            if (input == 10 && !search_text.empty()) { // TODO: same as subs refresh
+            if (input == 10 && !search_text.empty()) {
                 searched = true;
                 awaiting_refresh = true;
-                do_search();
+                std::thread search_thread(do_search);
+                search_thread.detach();
             } else if (input == 127) {
                 if (search_text.size() > 0)
                     search_text = search_text.substr(0, search_text.size() - 1);

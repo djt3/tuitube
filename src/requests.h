@@ -11,6 +11,7 @@
 #include <sstream>
 
 #include "invidious/video.h"
+#include "config.h"
 
 namespace requests {
     namespace  {
@@ -28,7 +29,7 @@ namespace requests {
     }
 
     std::vector<invidious::c_video> extract_videos(const std::string& url) {
-        std::string full_url = "https://invidious.snopyta.org" + url;
+        std::string full_url = config::invidious_instance + url;
         std::string response = make_request(full_url);
 
         std::vector<invidious::c_video> videos {};
@@ -39,21 +40,20 @@ namespace requests {
             if (index == std::string::npos)
                 break;
 
-						// find url
             response = response.substr(index + 12);
             index = response.find('\"');
             invidious::c_video video;
             video.url = response.substr(0, index);
 
-						// find title
             response = response.substr(index + 2);
             index = response.find('<');
             video.title = response.substr(0, index);;
 
-						// find channel url
-						index = response.find("href=");
+            index = response.find("channel/");
+            response = response.substr(index + 8);
+            index = response.find('\"');
+            video.channel_url = response.substr(0, index);
 
-						// find channel name
             index = response.find("\">");
             response = response.substr(index + 2);
             index = response.find('<');
@@ -94,7 +94,7 @@ namespace requests {
     }
 
     std::string extract_video_link(const invidious::c_video& video) {
-        std::string full_url = "https://invidious.snopyta.org" + video.url;
+        std::string full_url = config::invidious_instance + video.url;
         std::string response = make_request(full_url);
 
         auto index = response.find("<source");
