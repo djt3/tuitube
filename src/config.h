@@ -12,9 +12,9 @@ namespace config {
     // const static std::string playcmd_start = "youtube-dl -o - \"";
     // const static std::string playcmd_end = "\" | mpv -";
 
-    const static std::string playcmd_start = "youtube-dl -o - \"";
+    const static std::string playcmd_start = "mpv \"";
     // url is placed in middle
-    const static std::string playcmd_end = "\" | mpv -";
+    const static std::string playcmd_end = "\"";
 }
 
 #endif //TUITUBE_CONFIG_H
