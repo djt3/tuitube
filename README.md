@@ -31,7 +31,9 @@ Kiss linux:
 Other:
 
 Install dependancies and
+
 `git clone https://github.com/djt3/tuitube && cd tuitube
+
 cmake . && make && make install`
 
 ## How to change subscriptions manually:
