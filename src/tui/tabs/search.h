@@ -98,6 +98,7 @@ namespace tui::tabs::search {
 
                 printf("playing video...\n");
                 last_action = "played " + videos[selected].title;
+                request_update = true;
                 std::string cmd = config::playcmd_start
                                   + requests::extract_video_link(videos[selected])
                                   + config::playcmd_end;
