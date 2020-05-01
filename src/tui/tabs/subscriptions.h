@@ -156,6 +156,7 @@ namespace tui::tabs::subscriptions {
                               + config::playcmd_end;
 
             system(cmd.c_str());
+            request_update = true;
         } else if (input == 'r' && last_action != "refreshing...") { // r - refresh
                 std::thread refresh_thread(refresh_videos);
                 refresh_thread.detach();

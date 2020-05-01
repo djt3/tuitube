@@ -19,6 +19,7 @@ namespace tui::tabs::popular {
             request_update = true;
 
             videos = requests::extract_videos("/");
+            last_action = "";
             request_update = true;
         }
     }
@@ -65,6 +66,7 @@ namespace tui::tabs::popular {
                               + config::playcmd_end;
 
             system(cmd.c_str());
+            request_update = true;
         } else if (input == 'r' && last_action != "refreshing...") { // r - refresh
             std::thread refresh_thread(refresh_videos);
             refresh_thread.detach();

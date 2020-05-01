@@ -102,6 +102,7 @@ namespace tui::tabs::search {
                                   + requests::extract_video_link(videos[selected])
                                   + config::playcmd_end;
                 system(cmd.c_str());
+                request_update = true;
             } else if (input == 'a' && !videos.empty()) {
                 subscriptions::add_sub(videos[selected]);
                 last_action = "subscribed to " + videos[selected].channel_url;
