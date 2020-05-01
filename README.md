@@ -32,9 +32,9 @@ Other:
 
 Install dependancies and
 
-`git clone https://github.com/djt3/tuitube && cd tuitube
+`git clone https://github.com/djt3/tuitube && cd tuitube`
 
-cmake . && make && make install`
+`cmake . && make && make install`
 
 ## How to change subscriptions manually:
 The file is at "~/.config/tuitube_subs", add as "{channel id / name}" from the channel url, with one per line.
