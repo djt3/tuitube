@@ -27,7 +27,9 @@ Very much still a work in progress. Build with cmake.
 ## Installing
 Kiss linux:
 `kiss b tuitube && kiss i tuitube`
+
 Other:
+
 Install dependancies and
 `git clone https://github.com/djt3/tuitube && cd tuitube
 cmake . && make && make install`
