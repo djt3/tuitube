@@ -23,7 +23,7 @@ namespace tui::tabs::subscriptions {
         static std::vector<invidious::c_video> videos;
         static std::vector<std::string> channels;
         const static std::string subs_file_path = std::string(getenv("HOME")) + "/.config/tuitube_subs";
-        static std::string last_action = "";
+        static std::string last_action = "refreshing...";
 
 
         // returns true if the subs file needs cleaning
@@ -69,6 +69,7 @@ namespace tui::tabs::subscriptions {
             }
 
             last_action = "refreshing...";
+            request_update = true;
 
             // cleans up duplicated and empty lines in the subs file
             if (refresh_subs_file())
