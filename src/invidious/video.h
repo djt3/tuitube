@@ -13,6 +13,26 @@ namespace invidious {
         std::string channel_url;
         std::string url;
         uint64_t time;
+
+        void cleanup_title() {
+            auto pos = title.find("&quot;");
+            while (pos != std::string::npos) {
+                title.replace(pos, 6, "\"");
+                pos = title.find("&quot;");
+            }
+
+            pos = title.find("&#");
+            while (pos != std::string::npos) {
+                if (title[pos + 4] == ';') {
+                    char character = std::stoi(title.substr(pos + 2, 2));
+                    title.replace(pos, 5, std::string(character, 1));
+                } else
+                    break;
+                
+                pos = title.find("&#");
+                std::cout << title.c_str() << std::endl;
+            }
+        }
     };
 }
 
