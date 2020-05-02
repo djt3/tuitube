@@ -80,21 +80,18 @@ namespace tui {
         std::thread input_thread(tui::input_loop);
         input_thread.detach();
 
-        int i = 0;
         while (!exit) {
             if(input_lock)
                 continue;
 
-            std::this_thread::sleep_for(std::chrono::milliseconds (10));
-            i++;
+            std::this_thread::sleep_for(std::chrono::milliseconds (50));
 
             if (force_update)
                 force_update = false;
             else if(current_tab == e_tab_page::search && tabs::search::is_update_required());
             else if(current_tab == e_tab_page::popular && tabs::popular::is_update_required());
             else if(current_tab == e_tab_page::subs && tabs::subscriptions::is_update_required());
-            else if (i > 100) {
-                i = 0;
+            else {
                 int terminal_width = terminal::get_terminal_width();
                 int terminal_height = terminal::get_terminal_height();
 
@@ -106,8 +103,6 @@ namespace tui {
                 else
                     continue;
             }
-            else
-                continue;
 
             terminal::clear();
 
