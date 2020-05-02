@@ -30,7 +30,6 @@ namespace invidious {
                     break;
                 
                 pos = title.find("&#");
-                std::cout << title.c_str() << std::endl;
             }
         }
     };

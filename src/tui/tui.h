@@ -24,7 +24,7 @@ namespace tui {
     namespace {
         static bool exit = false;
         static bool input_lock = false; // play is called in input loop, prevent refresh to show buffering
-        static bool force_update = false;
+        static bool force_update = true;
 
         enum class e_tab_page : int {
             subs = 0,
@@ -74,32 +74,37 @@ namespace tui {
 
     void run() {
         // old width and height used to check if a redraw is required
-        int old_terminal_width = -1;
-        int old_terminal_height = -1;
+        int old_terminal_width = terminal::get_terminal_width();
+        int old_terminal_height = terminal::get_terminal_height();
 
         std::thread input_thread(tui::input_loop);
         input_thread.detach();
 
+        int i = 0;
         while (!exit) {
             if(input_lock)
                 continue;
 
-            bool redraw_required = false;
-
-            int terminal_width = terminal::get_terminal_width();
-            int terminal_height = terminal::get_terminal_height();
+            std::this_thread::sleep_for(std::chrono::milliseconds (10));
+            i++;
 
             if (force_update)
                 force_update = false;
             else if(current_tab == e_tab_page::search && tabs::search::is_update_required());
             else if(current_tab == e_tab_page::popular && tabs::popular::is_update_required());
             else if(current_tab == e_tab_page::subs && tabs::subscriptions::is_update_required());
-            else if (terminal_width != old_terminal_width) {
-                old_terminal_width = terminal_width;
-                redraw_required = true;
-            } else if (terminal_height != old_terminal_height) {
-                old_terminal_height = terminal_height;
-                redraw_required = true;
+            else if (i > 100) {
+                i = 0;
+                int terminal_width = terminal::get_terminal_width();
+                int terminal_height = terminal::get_terminal_height();
+
+                if (terminal_width != old_terminal_width)
+                    old_terminal_width = terminal_width;
+                else if (terminal_height != old_terminal_height)
+                    old_terminal_height = terminal_height;
+
+                else
+                    continue;
             }
             else
                 continue;
@@ -107,11 +112,11 @@ namespace tui {
             terminal::clear();
 
             if (current_tab == e_tab_page::search)
-                tabs::search::draw(terminal_width, terminal_height - 1);
+                tabs::search::draw(old_terminal_width, old_terminal_height - 1);
             else if (current_tab == e_tab_page::popular)
-                tabs::popular::draw(terminal_width, terminal_height - 1);
+                tabs::popular::draw(old_terminal_width, old_terminal_height - 1);
             else if (current_tab == e_tab_page::subs)
-                tabs::subscriptions::draw(terminal_width, terminal_height - 1);
+                tabs::subscriptions::draw(old_terminal_width, old_terminal_height - 1);
 
             fflush(stdout);
         }
