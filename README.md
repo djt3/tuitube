@@ -28,6 +28,10 @@ Kiss linux:
 
 `kiss b tuitube && kiss i tuitube`
 
+Arch linux:
+
+`{aur helper} -S tuitube`
+
 Other:
 
 Install dependancies and
