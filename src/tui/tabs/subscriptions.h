@@ -65,6 +65,7 @@ namespace tui::tabs::subscriptions {
 
             if (!std::filesystem::exists(subs_file_path)) {
                 last_action = "subs file empty";
+                request_update = true;
                 return;
             }
 
@@ -93,8 +94,14 @@ namespace tui::tabs::subscriptions {
 						for (auto& thread : threads)
 							thread.join();
 
+            if (channels.empty()) {
+                last_action = "subs file empty";
+                request_update = true;
+                return;
+            }
             if (videos.empty()) {
                 last_action = "no videos found";
+                request_update = true;
                 return;
             }
 

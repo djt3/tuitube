@@ -49,7 +49,7 @@ namespace tui {
                 char input;
                 read(0, &input, 1);
 
-                if (current_tab == e_tab_page::subs && input == 'q')
+                if (current_tab != e_tab_page::search && input == 'q')
                     exit = true;
                 else if (input == 9) { // tab
                     current_tab = static_cast<e_tab_page>((static_cast<int>(current_tab) + 1) %
