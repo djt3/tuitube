@@ -62,6 +62,7 @@ namespace tui::tabs::subscriptions {
 
         static void refresh_videos() {
             videos.clear();
+            refresh_subs_file();
 
             if (!std::filesystem::exists(subs_file_path)) {
                 last_action = "subs file empty";
