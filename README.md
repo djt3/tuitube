@@ -30,7 +30,7 @@ Kiss linux:
 
 Arch linux:
 
-`{aur helper} -S tuitube'
+`{aur helper} -S tuitube`
 
 Other:
 
