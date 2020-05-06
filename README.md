@@ -1,7 +1,5 @@
 # tuitube
-minimal tui youtube (invidious) frontend made in c++
-
-Build with cmake. 
+A minimal tui youtube (invidious) frontend made in c++
 
 ## Dependancies:
 - mpv (can be changed in config.h)
