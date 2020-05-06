@@ -20,6 +20,7 @@ Very much still a work in progress. Build with cmake.
 - Include channel / playlist / mix results in search
 - Suggested videos
 - Auto invidious instance selector
+- Removing all calls to system("clear") for smoother navigation
 
 ## Known bugs:
 - None, please report any you find :)
