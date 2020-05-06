@@ -39,7 +39,7 @@ namespace tui::utils {
                     terminal::set_text_color(terminal::e_color::black);
                 }
 
-                std::string text = video.channel + " - " + video.title;
+                std::string text = video.channel_name + " - " + video.title;
                 if (text.size() > width)
                     text = text.substr(0, width - 3) + "...";
 

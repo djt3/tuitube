@@ -63,7 +63,7 @@ namespace requests {
             index = response.find("\">");
             response = response.substr(index + 2);
             index = response.find('<');
-            video.channel = response.substr(0, index);
+            video.channel_name = response.substr(0, index);
 
             // calculate time
             index = response.find("<div class=");

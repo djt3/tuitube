@@ -8,10 +8,12 @@
 #include <fstream>
 
 #include "../utils.h"
+#include "channel_view.h"
 
 namespace tui::tabs::search {
     namespace {
         static bool searched = false;
+        static bool view_channel = false;
         static std::string search_text = "";
         static std::string last_action = "";
         static bool awaiting_search = false;
@@ -19,6 +21,7 @@ namespace tui::tabs::search {
         static int selected = 0;
         static int scroll = 0;
         static std::vector<invidious::c_video> videos;
+        static c_channel_view channel_view;
 
         static void do_search() {
             videos.clear();
@@ -33,11 +36,12 @@ namespace tui::tabs::search {
             awaiting_search = false;
             request_update = true;
         }
-
-
     }
 
     static bool is_update_required() {
+        if(view_channel)
+            return channel_view.request_update;
+
         if (request_update) {
             request_update = false;
             return true;
@@ -50,6 +54,11 @@ namespace tui::tabs::search {
             tui::utils::print_title("search", width , last_action);
         else
             tui::utils::print_title("search - " + search_text, width, last_action);
+
+        if (view_channel) {
+            channel_view.draw(width, height);
+            return;
+        }
 
         if (awaiting_search)
             printf("loading...");
@@ -91,6 +100,20 @@ namespace tui::tabs::search {
     static void handle_input(const char& input) {
         request_update = true;
 
+        if (input == 'a' && !videos.empty()) {
+            subscriptions::add_sub(videos[selected]);
+            last_action = "subscribed to " + videos[selected].channel_url;
+        }
+
+        if (view_channel) {
+            if (input == 'b')
+                view_channel = false;
+            else
+                channel_view.handle_input(input);
+
+            return;
+        }
+
         if (searched) {
             if (input == 10 && !videos.empty()) { // enter
                 request_update = false;
@@ -104,15 +127,18 @@ namespace tui::tabs::search {
                                   + config::playcmd_end;
                 system(cmd.c_str());
                 request_update = true;
-            } else if (input == 'a' && !videos.empty()) {
-                subscriptions::add_sub(videos[selected]);
-                last_action = "subscribed to " + videos[selected].channel_url;
             } else if (input == 's') {
                 awaiting_search = false;
                 searched = false;
                 search_text = ""; // maybe don't reset this
                 last_action = "";
                 scroll = 0;
+            } else if (input == 'c' && !videos.empty()) { // c - view channel
+                view_channel = true;
+                last_action = "view channel " + videos[selected].channel_name;
+                channel_view = c_channel_view(videos[selected]);
+                std::thread refresh_thread([]{channel_view.refresh_videos();});
+                refresh_thread.detach();
             } else if (input == 65) { // up
                 if (selected > 0)
                     selected--;

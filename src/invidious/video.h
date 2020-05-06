@@ -9,7 +9,7 @@ namespace invidious {
     class c_video {
     public:
         std::string title;
-        std::string channel;
+        std::string channel_name;
         std::string channel_url;
         std::string url;
         uint64_t time;

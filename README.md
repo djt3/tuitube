@@ -14,6 +14,7 @@ Very much still a work in progress. Build with cmake.
 - Adding subscriptions from search
 - Removing subscriptions
 - Changing invidious instance (config.h, needs recompile)
+- Viewing channels
 
 ## What's planned:
 - Include channel / playlist / mix results in search

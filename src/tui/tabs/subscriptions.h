@@ -14,17 +14,19 @@
 #include "../../requests.h"
 #include "../../config.h"
 #include "../utils.h"
+#include "channel_view.h"
 
 namespace tui::tabs::subscriptions {
     namespace {
         static bool request_update = false;
+        static bool view_channel = false;
         static int selected = 0;
         static int scroll = 0;
         static std::vector<invidious::c_video> videos;
         static std::vector<std::string> channels;
         const static std::string subs_file_path = std::string(getenv("HOME")) + "/.config/tuitube_subs";
         static std::string last_action = "refreshing...";
-
+        static c_channel_view channel_view;
 
         // returns true if the subs file needs cleaning
         static bool refresh_subs_file() {
@@ -117,6 +119,9 @@ namespace tui::tabs::subscriptions {
     }
 
     static bool is_update_required() {
+        if(view_channel)
+            return channel_view.request_update;
+
         if (request_update) {
             request_update = false;
             return true;
@@ -140,6 +145,11 @@ namespace tui::tabs::subscriptions {
 
         tui::utils::print_title("subscriptions", width, last_action);
 
+        if (view_channel) {
+            channel_view.draw(width, height);
+            return;
+        }
+
         if (!videos.empty()) {
             while (selected > height + scroll - 2)
                 scroll++;
@@ -154,6 +164,15 @@ namespace tui::tabs::subscriptions {
 
     static void handle_input(const char &input) {
         request_update = true;
+
+        if (view_channel) {
+            if (input == 'b')
+                view_channel = false;
+            else
+                channel_view.handle_input(input);
+
+            return;
+        }
 
         if (input == 10 && !videos.empty()) { // enter - open video
             request_update = false;
@@ -174,6 +193,12 @@ namespace tui::tabs::subscriptions {
             last_action = "";
         } else if (input == 'd' && last_action != "refreshing..." && !videos.empty()) {
             write_subs(true);
+        } else if (input == 'c' && !videos.empty()) { // c - view channel
+            view_channel = true;
+            last_action = "view channel " + videos[selected].channel_name;
+            channel_view = c_channel_view(videos[selected]);
+            std::thread refresh_thread([]{channel_view.refresh_videos();});
+            refresh_thread.detach();
         } else if (input == 65) { // up
             if (selected > 0)
                 selected--;
