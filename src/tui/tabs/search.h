@@ -61,11 +61,11 @@ namespace tui::tabs::search {
         }
 
         if (awaiting_search)
-            printf("loading...");
+            printf("%s", "loading...");
         else if (!searched) {
             int i;
             for (i = 0; i < height / 2; i++)
-                printf("\n");
+                printf("%s", "\n");
 
             std::string text = "          [";
             text += search_text;
@@ -73,10 +73,10 @@ namespace tui::tabs::search {
             for (int j = 0; j < width - 20 - search_text.size(); j++)
                 text += " ";
             text += "]";
-            printf(text.c_str());
+            printf("%s", text.c_str());
 
             for (; i < height - 1; i++)
-                printf("\n");
+                printf("%s", "\n");
         } else {
             while (selected > height + scroll - 2)
                 scroll++;
@@ -119,7 +119,7 @@ namespace tui::tabs::search {
                 request_update = false;
                 terminal::clear();
 
-                printf("playing video...\n");
+                printf("%s", "playing video...\n");
                 last_action = "played " + videos[selected].title;
                 request_update = true;
                 std::string cmd = config::playcmd_start
@@ -148,12 +148,13 @@ namespace tui::tabs::search {
             } else if (input != 'a')
                 request_update = false;
         } else {
-            if (input == 10 && !search_text.empty()) {
+            if (input == 10 && !search_text.empty()) { // enter - search
                 searched = true;
                 awaiting_search = true;
+                terminal::clear(true);
                 std::thread search_thread(do_search);
                 search_thread.detach();
-            } else if (input == 127) {
+            } else if (input == 127) { // backspace - delete character
                 if (search_text.size() > 0)
                     search_text = search_text.substr(0, search_text.size() - 1);
             } else

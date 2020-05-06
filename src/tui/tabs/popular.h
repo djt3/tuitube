@@ -86,7 +86,7 @@ namespace tui::tabs::popular {
             request_update = false;
             terminal::clear();
 
-            printf("playing video...\n");
+            printf("%s", "playing video...\n");
             last_action = "played " + videos[selected].title;
             request_update = true;
             std::string cmd = config::playcmd_start

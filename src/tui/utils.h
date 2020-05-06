@@ -20,10 +20,10 @@ namespace tui::utils {
             if (formatted_title.size() > width)
                 formatted_title = formatted_title.substr(0, width - 3) + "...";
 
-            printf(formatted_title.c_str());
+            printf("%s", formatted_title.c_str());
 
             for (int i = 0; i < width - formatted_title.length(); i++)
-                printf(" "); // formatted_title += adds the incorrect number?
+                printf("%s", " "); // formatted_title += adds the incorrect number?
 
             terminal::reset();
         }
@@ -43,9 +43,11 @@ namespace tui::utils {
                 if (text.size() > width)
                     text = text.substr(0, width - 3) + "...";
 
-                printf(text.c_str());
+                printf("%s", text.c_str());
+                for (int i = 0; i < width - text.length(); i++)
+                    printf("%s", " ");
                 if (i != max - 1)
-                    printf("\n");
+                    printf("%s", "\n");
 
                 if (i == selected)
                     terminal::reset();
@@ -56,15 +58,15 @@ namespace tui::utils {
             terminal::set_background_color(terminal::e_color::white);
             terminal::set_text_color(terminal::e_color::black);
 
-            printf("\n");
+            printf("%s", "\n");
 
             if (binds.size() > width)
-                printf(binds.substr(0, width - 3).c_str(), "...");
+                printf("%s", binds.substr(0, width - 3).c_str(), "...");
             else {
-                printf(binds.c_str());
+                printf("%s", binds.c_str());
 
                 for (int i = 0; i < width - binds.length(); i++)
-                    printf(" ");
+                    printf("%s", " ");
             }
 
             terminal::reset();

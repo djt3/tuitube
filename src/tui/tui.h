@@ -21,8 +21,9 @@
 #include "tabs/popular.h"
 
 namespace tui {
+    static bool exit = false;
+
     namespace {
-        static bool exit = false;
         static bool input_lock = false; // play is called in input loop, prevent refresh to show buffering
         static bool force_update = true;
 
@@ -56,6 +57,7 @@ namespace tui {
                             static_cast<int>(e_tab_page::max));
 
                     force_update = true;
+                    terminal::clear(true);
                 }
                 else if (current_tab == e_tab_page::subs)
                     tabs::subscriptions::handle_input(input);
@@ -79,6 +81,8 @@ namespace tui {
 
         std::thread input_thread(tui::input_loop);
         input_thread.detach();
+
+        terminal::clear(true);
 
         while (!exit) {
             if(input_lock)
@@ -115,6 +119,16 @@ namespace tui {
 
             fflush(stdout);
         }
+
+
+        static struct termios term = {0};
+        if (tcgetattr(0, &term) < 0)
+            perror("tcsetattr()");
+
+        term.c_lflag |= ICANON;
+        term.c_lflag |= ECHO;
+        if (tcsetattr(0, TCSADRAIN, &term) < 0)
+            perror("tcsetattr ~ICANON");
     }
 }
 

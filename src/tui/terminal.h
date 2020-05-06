@@ -21,8 +21,13 @@ namespace terminal {
         white
     };
 
-    static inline void clear() {
-        system("clear");
+    static inline void clear(bool full_clear = false) {
+        fflush(stdout);
+        if (full_clear)
+            system("clear");
+        else
+            printf("\033[0;0H");
+        fflush(stdout);
     }
 
     static inline winsize get_terminal_size() {
@@ -49,6 +54,14 @@ namespace terminal {
 
     static inline void reset() {
         printf("\u001b[0m");
+    }
+
+    static inline void show_cursor() {
+        system("setterm -cursor on");
+    }
+
+    static inline void hide_cursor() {
+        system("setterm -cursor off");
     }
 }
 
