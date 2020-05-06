@@ -159,7 +159,7 @@ namespace tui::tabs::subscriptions {
             tui::utils::print_videos(videos, selected, width, height, scroll);
         }
 
-        tui::utils::print_footer("[tab] change tab [q] quit [r] refresh [d] unsubscribe", width);
+        tui::utils::print_footer("[tab] change tab [q] quit [r] refresh [d] unsubscribe [c] view channel", width);
     }
 
     static void handle_input(const char &input) {

@@ -91,7 +91,7 @@ namespace tui::tabs::search {
         terminal::set_text_color(terminal::e_color::black);
 
         if (searched)
-            tui::utils::print_footer("[tab] change tab [s] show searchbox [a] subscribe", width);
+            tui::utils::print_footer("[tab] change tab [s] show searchbox [a] subscribe [c] view channel", width);
         else
             tui::utils::print_footer("[tab] change tab [enter] search", width);
     }
@@ -145,7 +145,7 @@ namespace tui::tabs::search {
             } else if (input == 66) { // down
                 if (selected < videos.size() - 1)
                     selected++;
-            } else
+            } else if (input != 'a')
                 request_update = false;
         } else {
             if (input == 10 && !search_text.empty()) {

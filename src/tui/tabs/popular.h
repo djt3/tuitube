@@ -62,7 +62,7 @@ namespace tui::tabs::popular {
             tui::utils::print_videos(videos, selected, width, height, scroll);
         }
 
-        tui::utils::print_footer("[tab] change tab [q] quit [r] refresh [a] subscribe", width);
+        tui::utils::print_footer("[tab] change tab [q] quit [r] refresh [a] subscribe [c] view channel", width);
     }
 
     static void handle_input(const char &input) {
@@ -111,7 +111,7 @@ namespace tui::tabs::popular {
         } else if (input == 66) { // down
             if (selected < videos.size() - 1)
                 selected++;
-        } else
+        } else if (input != 'a')
             request_update = false;
     }
 }

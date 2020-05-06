@@ -43,7 +43,7 @@ namespace tui::tabs {
                 tui::utils::print_videos(videos, selected, width, height, scroll);
             }
 
-            tui::utils::print_footer("[tab] change tab [b] back [a] subscribe", width);
+            tui::utils::print_footer("[tab] change tab [b] back [a] subscribe [c] view channel", width);
         }
 
         bool handle_input(const char &input) {
