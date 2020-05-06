@@ -31,6 +31,13 @@ namespace invidious {
                 
                 pos = title.find("&#");
             }
+
+            pos = title.find("&amp;");
+            while (pos != std::string::npos) {
+                title.replace(pos, 5, "&");
+
+                pos = title.find(" &amp;");
+            }
         }
     };
 }
