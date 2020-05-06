@@ -29,7 +29,7 @@ Kiss linux:
 
 `kiss b tuitube && kiss i tuitube`
 
-Arch linux:
+Arch based (arch, manjaro, artix):
 
 `{aur helper} -S tuitube`
 
