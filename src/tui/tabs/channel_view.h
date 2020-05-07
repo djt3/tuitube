@@ -65,10 +65,10 @@ namespace tui::tabs {
             } else if (input == 'a' && !videos.empty()) { // a - subscribe
                 last_action = "subscribed to " + videos[selected].channel_url;
                 return true;
-            } else if (input == 65) { // up
+            } else if (input == 65 || input == 'j') { // up
                 if (selected > 0)
                     selected--;
-            } else if (input == 66) { // down
+            } else if (input == 66 || input == 'k') { // down
                 if (selected < videos.size() - 1)
                     selected++;
             } else

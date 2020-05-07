@@ -23,7 +23,7 @@ namespace tui::utils {
             printf("%s", formatted_title.c_str());
 
             for (int i = 0; i < width - formatted_title.length(); i++)
-                printf("%s", " "); // formatted_title += adds the incorrect number?
+                printf(" "); // formatted_title += adds the incorrect number?
 
             terminal::reset();
         }
@@ -39,15 +39,16 @@ namespace tui::utils {
                     terminal::set_text_color(terminal::e_color::black);
                 }
 
-                std::string text = video.channel_name + " - " + video.title;
+                std::string text =
+                        video.channel_name + " - " + video.title + " - " + video.time_str + " - " + video.length;
                 if (text.size() > width)
                     text = text.substr(0, width - 3) + "...";
 
                 printf("%s", text.c_str());
                 for (int i = 0; i < width - text.length(); i++)
-                    printf("%s", " ");
+                    printf(" ");
                 if (i != max - 1)
-                    printf("%s", "\n");
+                    printf("\n");
 
                 if (i == selected)
                     terminal::reset();
@@ -58,7 +59,7 @@ namespace tui::utils {
             terminal::set_background_color(terminal::e_color::white);
             terminal::set_text_color(terminal::e_color::black);
 
-            printf("%s", "\n");
+            printf("\n");
 
             if (binds.size() > width)
                 printf("%s", binds.substr(0, width - 3).c_str(), "...");
@@ -66,7 +67,7 @@ namespace tui::utils {
                 printf("%s", binds.c_str());
 
                 for (int i = 0; i < width - binds.length(); i++)
-                    printf("%s", " ");
+                    printf(" ");
             }
 
             terminal::reset();

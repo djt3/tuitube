@@ -128,6 +128,7 @@ namespace tui::tabs::search {
                 system(cmd.c_str());
                 request_update = true;
             } else if (input == 's') {
+                terminal::clear(true);
                 awaiting_search = false;
                 searched = false;
                 search_text = ""; // maybe don't reset this
@@ -139,10 +140,10 @@ namespace tui::tabs::search {
                 channel_view = c_channel_view(videos[selected]);
                 std::thread refresh_thread([]{channel_view.refresh_videos();});
                 refresh_thread.detach();
-            } else if (input == 65) { // up
+            } else if (input == 65 || input == 'j') { // up
                 if (selected > 0)
                     selected--;
-            } else if (input == 66) { // down
+            } else if (input == 66 || input == 'k') { // down
                 if (selected < videos.size() - 1)
                     selected++;
             } else if (input != 'a')

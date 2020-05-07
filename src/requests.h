@@ -37,13 +37,18 @@ namespace requests {
 
         std::size_t index = 1;
         while (true) {
-            index = response.find("<p><a href=");
+            index = response.find("<p class=\"length\">");
             if (index == std::string::npos)
                 break;
 
+            response = response.substr(index + 18);
+            invidious::c_video video;
+            video.length = response.substr(0, response.find("</p>"));
+
+            index = response.find("<p><a href=");
+
             response = response.substr(index + 12);
             index = response.find('\"');
-            invidious::c_video video;
             video.url = response.substr(0, index);
 
             response = response.substr(index + 2);
@@ -68,6 +73,8 @@ namespace requests {
             // calculate time
             index = response.find("<div class=");
             response = response.substr(index + 31);
+            video.time_str = response.substr(0, response.find("</div>"));
+
             size_t space_index = response.find(' ');
 
             uint mult = 1;

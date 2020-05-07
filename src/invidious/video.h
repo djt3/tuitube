@@ -12,6 +12,8 @@ namespace invidious {
         std::string channel_name;
         std::string channel_url;
         std::string url;
+        std::string time_str;
+        std::string length;
         uint64_t time;
 
         void cleanup_title() {

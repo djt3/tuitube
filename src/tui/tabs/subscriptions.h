@@ -79,23 +79,23 @@ namespace tui::tabs::subscriptions {
             if (refresh_subs_file())
                 write_subs();
 
-						std::vector<std::thread> threads { };
+            std::vector<std::thread> threads{};
 
-            for (const auto& channel : channels) {
-								auto scrape_fn = [=]() {
-										auto channel_vids = requests::extract_videos("/channel/" + channel, channel);
-										if (channel_vids.empty())
-												return;
+            for (const auto &channel : channels) {
+                auto scrape_fn = [=]() {
+                    auto channel_vids = requests::extract_videos("/channel/" + channel, channel);
+                    if (channel_vids.empty())
+                        return;
 
-										videos.insert(videos.end(), channel_vids.begin(), channel_vids.end());
-										request_update = true;
-								};
-								
-								threads.push_back(std::thread(scrape_fn));
+                    videos.insert(videos.end(), channel_vids.begin(), channel_vids.end());
+                    request_update = true;
+                };
+
+                threads.push_back(std::thread(scrape_fn));
             }
 
-						for (auto& thread : threads)
-							thread.join();
+            for (auto &thread : threads)
+                thread.join();
 
             if (channels.empty()) {
                 last_action = "subs file empty";
@@ -199,13 +199,13 @@ namespace tui::tabs::subscriptions {
             channel_view = c_channel_view(videos[selected]);
             std::thread refresh_thread([]{channel_view.refresh_videos();});
             refresh_thread.detach();
-        } else if (input == 65) { // up
+        } else if (input == 65 || input == 'j') { // up
             if (selected > 0)
                 selected--;
-        } else if (input == 66) { // down
+        } else if (input == 66 || input == 'k') { // down
             if (selected < videos.size() - 1)
                 selected++;
-        } else
+        }else
             request_update = false;
     }
 }
