@@ -21,7 +21,7 @@ A minimal tui youtube (invidious) frontend made in c++
 - Removing all calls to system("clear") for smoother navigation
 
 ## Known bugs:
-- Video duration is messed up on the search page, will be fixed shortly
+- None, if you have a bug report or suggestion please make an issue
 
 ## Installing
 Kiss linux:
