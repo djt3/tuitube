@@ -42,6 +42,10 @@ namespace requests {
                 break;
 
             response = response.substr(index + 18);
+
+            if(response.find(':') > 5)
+                continue;
+
             invidious::c_video video;
             video.length = response.substr(0, response.find("</p>"));
 

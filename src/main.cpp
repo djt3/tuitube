@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 int main() {
-    signal(SIGINT, [](int sig){terminal::show_cursor(); tui::exit = true;});
+    signal(SIGINT, [](int sig){terminal::clear(true); terminal::show_cursor(); tui::exit = true;});
 
     terminal::hide_cursor();
     tui::run();
