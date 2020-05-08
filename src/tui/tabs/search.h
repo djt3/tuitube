@@ -127,10 +127,10 @@ namespace tui::tabs::search {
                                   + config::playcmd_end;
                 system(cmd.c_str());
                 request_update = true;
-            } else if (input == 's') {
-                terminal::clear(true);
+            } else if (input == 's') { // s - back
                 awaiting_search = false;
                 searched = false;
+                terminal::clear(true);
                 search_text = ""; // maybe don't reset this
                 last_action = "";
                 scroll = 0;

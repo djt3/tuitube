@@ -21,12 +21,16 @@ namespace terminal {
         white
     };
 
+    static inline void move_cursor(int x, int y) {
+        printf("\033[%d;%dH", x, y);
+    }
+
     static inline void clear(bool full_clear = false) {
         fflush(stdout);
         if (full_clear)
             system("clear");
         else
-            printf("\033[0;0H");
+            move_cursor(0, 0);
         fflush(stdout);
     }
 
