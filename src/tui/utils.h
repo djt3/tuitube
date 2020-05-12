@@ -17,9 +17,9 @@ namespace tui::utils {
     static std::vector<std::string> last_draw_queue = {};
   }
 
-  static void print_draw_queue() {
+  static void print_draw_queue(bool force_update) {
     for (int i = 0; i < draw_queue.size(); i++) {
-      if (width != last_width || (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) || ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
+      if (force_update || width != last_width || (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) || ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
 
       if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected) {
         terminal::set_background_color(terminal::e_color::white);
@@ -89,7 +89,7 @@ namespace tui::utils {
     }
   }
 
-  static void print_footer(const std::string& binds, int width) {
+  static void print_footer(const std::string& binds, int width, bool force_update) {
     static bool footer_in_queue = false;
 
     std::string str;
@@ -100,7 +100,15 @@ namespace tui::utils {
 
     draw_queue.back() = str;
 
-    print_draw_queue();
+    print_draw_queue(force_update);
+  }
+
+  static void play_video(const invidious::c_video& video) {
+    std::string cmd = config::playcmd_start
+      + requests::extract_video_link(video)
+      + config::playcmd_end;
+
+    system(cmd.c_str());
   }
 }
 

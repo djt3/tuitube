@@ -10,6 +10,7 @@
 namespace tui::tabs::popular {
     namespace {
         static bool request_update = false;
+        static bool force_update = false;
         static bool view_channel = false;
         static int selected = 0;
         static int scroll = 0;
@@ -60,7 +61,8 @@ namespace tui::tabs::popular {
 
         tui::utils::print_videos(videos, selected, width, height, scroll);
 
-        tui::utils::print_footer("[tab] change tab [q] quit [r] refresh [a] subscribe [c] view channel", width);
+        tui::utils::print_footer("[tab] change tab [q] quit [r] refresh [a] subscribe [c] view channel", width, force_update);
+        force_update = false;
     }
 
     static void handle_input(const char &input) {
@@ -84,15 +86,11 @@ namespace tui::tabs::popular {
             request_update = false;
             terminal::clear();
 
-            printf("%s", "playing video...\n");
             last_action = "played " + videos[selected].title;
             request_update = true;
-            std::string cmd = config::playcmd_start
-                              + requests::extract_video_link(videos[selected])
-                              + config::playcmd_end;
-
-            system(cmd.c_str());
+            utils::play_video(videos[selected]);
             request_update = true;
+            force_update = true;
         } else if (input == 'r' && last_action != "refreshing...") { // r - refresh
             std::thread refresh_thread(refresh_videos);
             refresh_thread.detach();

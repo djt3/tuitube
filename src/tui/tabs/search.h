@@ -18,6 +18,7 @@ namespace tui::tabs::search {
         static std::string last_action = "";
         static bool awaiting_search = false;
         static bool request_update = false;
+        static bool force_update = false;
         static int selected = 0;
         static int scroll = 0;
         static std::vector<invidious::c_video> videos;
@@ -81,9 +82,10 @@ namespace tui::tabs::search {
 
 
         if (searched)
-            tui::utils::print_footer("[tab] change tab [s] show searchbox [a] subscribe [c] view channel", width);
+          tui::utils::print_footer("[tab] change tab [s] show searchbox [a] subscribe [c] view channel", width, force_update);
         else
-            tui::utils::print_footer("[tab] change tab [enter] search", width);
+          tui::utils::print_footer("[tab] change tab [enter] search", width, force_update);
+        force_update = false;
     }
 
     // TODO: arrow keys for input
@@ -109,13 +111,10 @@ namespace tui::tabs::search {
                 request_update = false;
                 terminal::clear();
 
-                printf("%s", "playing video...\n");
                 last_action = "played " + videos[selected].title;
                 request_update = true;
-                std::string cmd = config::playcmd_start
-                                  + requests::extract_video_link(videos[selected])
-                                  + config::playcmd_end;
-                system(cmd.c_str());
+                utils::play_video(videos[selected]);
+                force_update = true;
                 request_update = true;
             } else if (input == 's') { // s - back
                 awaiting_search = false;

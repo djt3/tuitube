@@ -15,6 +15,7 @@ namespace tui::tabs {
     class c_channel_view {
     public:
         bool request_update = false;
+        bool force_update = false;
 
         c_channel_view() {}
 
@@ -41,7 +42,8 @@ namespace tui::tabs {
 
           tui::utils::print_videos(videos, selected, width, height, scroll);
 
-          tui::utils::print_footer("[tab] change tab [b] back [a] subscribe [c] view channel", width);
+          tui::utils::print_footer("[tab] change tab [b] back [a] subscribe [c] view channel", width, force_update);
+          force_update = false;
         }
 
         bool handle_input(const char &input) {
@@ -51,14 +53,10 @@ namespace tui::tabs {
                 request_update = false;
                 terminal::clear();
 
-                printf("%s", "playing video...\n");
                 last_action = "played " + videos[selected].title;
                 request_update = true;
-                std::string cmd = config::playcmd_start
-                                  + requests::extract_video_link(videos[selected])
-                                  + config::playcmd_end;
-
-                system(cmd.c_str());
+                utils::play_video(videos[selected]);
+                force_update = true;
                 request_update = true;
             } else if (input == 'a' && !videos.empty()) { // a - subscribe
                 last_action = "subscribed to " + videos[selected].channel_url;
