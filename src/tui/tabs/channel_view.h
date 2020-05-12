@@ -34,16 +34,14 @@ namespace tui::tabs {
         }
 
         void draw(const int &width, const int &height) {
-            if (!videos.empty()) {
-                while (selected > height + scroll - 2)
-                    scroll++;
-                while (selected < scroll)
-                    scroll--;
+          while (selected > height + scroll - 2)
+            scroll++;
+          while (selected < scroll)
+            scroll--;
 
-                tui::utils::print_videos(videos, selected, width, height, scroll);
-            }
+          tui::utils::print_videos(videos, selected, width, height, scroll);
 
-            tui::utils::print_footer("[tab] change tab [b] back [a] subscribe [c] view channel", width);
+          tui::utils::print_footer("[tab] change tab [b] back [a] subscribe [c] view channel", width);
         }
 
         bool handle_input(const char &input) {

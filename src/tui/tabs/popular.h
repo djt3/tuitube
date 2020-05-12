@@ -53,14 +53,12 @@ namespace tui::tabs::popular {
             return;
         }
 
-        if (!videos.empty()) {
-            while (selected > height + scroll - 2)
-                scroll++;
-            while (selected < scroll)
-                scroll--;
+        while (selected > height + scroll - 2)
+          scroll++;
+        while (selected < scroll)
+          scroll--;
 
-            tui::utils::print_videos(videos, selected, width, height, scroll);
-        }
+        tui::utils::print_videos(videos, selected, width, height, scroll);
 
         tui::utils::print_footer("[tab] change tab [q] quit [r] refresh [a] subscribe [c] view channel", width);
     }

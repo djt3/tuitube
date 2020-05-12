@@ -8,70 +8,100 @@
 #include "../invidious/video.h"
 
 namespace tui::utils {
-        static void print_title(const std::string& title, int width, const std::string& extra = "") {
-            terminal::set_background_color(terminal::e_color::white);
-            terminal::set_text_color(terminal::e_color::black);
+  namespace {
+    static int width = 0;
+    static int last_width = -1;
+    static int selected = 0;
+    static int last_selected = -1;
+    static std::vector<std::string> draw_queue = {""};
+    static std::vector<std::string> last_draw_queue = {};
+  }
 
-            std::string formatted_title = title;
+  static void print_draw_queue() {
+    for (int i = 0; i < draw_queue.size(); i++) {
+      if (width != last_width || (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) || ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
 
-            if (!extra.empty())
-                formatted_title = formatted_title + " - " + extra; // += doesn't work?
+      if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected) {
+        terminal::set_background_color(terminal::e_color::white);
+        terminal::set_text_color(terminal::e_color::black);
+      }
 
-            if (formatted_title.size() > width)
-                formatted_title = formatted_title.substr(0, width - 3) + "...";
+      terminal::move_cursor(0, i + 1);
+      if (!draw_queue[i].empty()) {
+        printf("%s", draw_queue[i].c_str());
 
-            printf("%s", formatted_title.c_str());
+        for (int j = 0; j < width - draw_queue[i].size(); j++)
+          printf(" ");
+        if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected)
+          terminal::reset();
+      }
+      else {
+        terminal::reset();
+        for (int j = 0; j < width - draw_queue[i].size(); j++)
+          printf(" ");
+      }
 
-            for (int i = 0; i < width - formatted_title.length(); i++)
-                printf(" "); // formatted_title += adds the incorrect number?
-
-            terminal::reset();
-        }
-
-        static void print_videos(const std::vector<invidious::c_video>& videos,
-                int selected, int width, int height, int scroll) {
-            int max = std::min(height + scroll - 1, static_cast<int>(videos.size()));
-            for (int i = scroll; i < max; i++) {
-                const auto &video = videos[i];
-
-                if (i == selected) {
-                    terminal::set_background_color(terminal::e_color::white);
-                    terminal::set_text_color(terminal::e_color::black);
-                }
-
-                std::string text =
-                        video.channel_name + " - " + video.title + " - " + video.time_str + " - " + video.length;
-                if (text.size() > width)
-                    text = text.substr(0, width - 3) + "...";
-
-                printf("%s", text.c_str());
-                for (int i = 0; i < width - text.length(); i++)
-                    printf(" ");
-                if (i != max - 1)
-                    printf("\n");
-
-                if (i == selected)
-                    terminal::reset();
-            }
-        }
-
-        static void print_footer(const std::string& binds, int width) {
-            terminal::set_background_color(terminal::e_color::white);
-            terminal::set_text_color(terminal::e_color::black);
-
-            printf("\n");
-
-            if (binds.size() > width)
-                printf("%s", binds.substr(0, width - 3).c_str(), "...");
-            else {
-                printf("%s", binds.c_str());
-
-                for (int i = 0; i < width - binds.length(); i++)
-                    printf(" ");
-            }
-
-            terminal::reset();
-        }
+      //if (1 != draw_queue.size() - 1)
+      //printf("\n");
     }
+    }
+
+    last_draw_queue = draw_queue;
+  }
+
+  static void print_title(const std::string& title, int new_width, const std::string& extra = "") {
+    last_width = width;
+    width = new_width;
+    std::string formatted_title = title;
+    draw_queue.clear();
+
+    if (!extra.empty())
+      formatted_title = formatted_title + " - " + extra; // += doesn't work?
+
+    if (formatted_title.size() > width)
+      formatted_title = formatted_title.substr(0, width - 3) + "...";
+
+    draw_queue.push_back(formatted_title);
+
+  }
+
+  static void print_videos(const std::vector<invidious::c_video>& videos,
+                           int new_selected, int width, int height, int scroll) {
+    draw_queue.resize(height);
+
+    if (videos.empty())
+      return;
+
+    int max = std::min(height + scroll - 1, static_cast<int>(videos.size()));
+
+    last_selected = selected;
+    selected = new_selected;
+
+    for (int i = scroll; i < max; i++) {
+      const auto &video = videos[i];
+
+      std::string text = video.channel_name + " - " + video.title + " - " + video.time_str + " - " + video.length;
+
+      if (text.size() > width)
+        text = text.substr(0, width - 3) + "...";
+
+      draw_queue[i - scroll + 1] = text;
+    }
+  }
+
+  static void print_footer(const std::string& binds, int width) {
+    static bool footer_in_queue = false;
+
+    std::string str;
+    if (binds.size() > width)
+      str = binds.substr(0, width - 3) + "...";
+    else
+      str = binds;
+
+    draw_queue.back() = str;
+
+    print_draw_queue();
+  }
+}
 
 #endif //TUITUBE_UTILS_H

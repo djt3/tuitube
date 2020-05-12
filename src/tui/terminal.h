@@ -22,7 +22,7 @@ namespace terminal {
     };
 
     static inline void move_cursor(int x, int y) {
-        printf("\033[%d;%dH", x, y);
+      printf("\033[%d;%dH", y, x);
     }
 
     static inline void clear(bool full_clear = false) {

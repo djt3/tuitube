@@ -60,35 +60,25 @@ namespace tui::tabs::search {
             return;
         }
 
-        if (awaiting_search)
-            printf("%s", "loading...");
-        else if (!searched) {
-            int i;
-            for (i = 0; i < height / 2; i++)
-                printf("%s", "\n");
+        while (selected > height + scroll - 2)
+          scroll++;
+        while (selected < scroll)
+          scroll--;
 
-            std::string text = "          [";
-            text += search_text;
-            //text.append("", width - 20 - search_text.size());
-            for (int j = 0; j < width - 20 - search_text.size(); j++)
-                text += " ";
-            text += "]";
-            printf("%s", text.c_str());
+        tui::utils::print_videos(videos, selected, width, height, scroll);
 
-            for (; i < height - 1; i++)
-                printf("%s", "\n");
-        } else {
-            while (selected > height + scroll - 2)
-                scroll++;
-            while (selected < scroll)
-                scroll--;
-
-            tui::utils::print_videos(videos, selected, width, height, scroll);
+        if (!searched) {
+          int i;
+          terminal::move_cursor(0, height / 2);
+          std::string text = "          [";
+          text += search_text;
+          //text.append("", width - 20 - search_text.size());
+          for (int j = 0; j < width - 20 - search_text.size(); j++)
+            text += " ";
+          text += "]";
+          printf("%s", text.c_str());
         }
 
-
-        terminal::set_background_color(terminal::e_color::white);
-        terminal::set_text_color(terminal::e_color::black);
 
         if (searched)
             tui::utils::print_footer("[tab] change tab [s] show searchbox [a] subscribe [c] view channel", width);

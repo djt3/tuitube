@@ -22,7 +22,7 @@ namespace tui::tabs::subscriptions {
         static bool view_channel = false;
         static int selected = 0;
         static int scroll = 0;
-        static std::vector<invidious::c_video> videos;
+        static std::vector<invidious::c_video> videos = {};
         static std::vector<std::string> channels;
         const static std::string subs_file_path = std::string(getenv("HOME")) + "/.config/tuitube_subs";
         static std::string last_action = "refreshing...";
@@ -142,7 +142,7 @@ namespace tui::tabs::subscriptions {
             std::thread refresh_thread(refresh_videos);
             refresh_thread.detach();
         });
-
+        
         tui::utils::print_title("subscriptions", width, last_action);
 
         if (view_channel) {
@@ -150,14 +150,12 @@ namespace tui::tabs::subscriptions {
             return;
         }
 
-        if (!videos.empty()) {
-            while (selected > height + scroll - 2)
-                scroll++;
-            while (selected < scroll)
-                scroll--;
+        while (selected > height + scroll - 2)
+          scroll++;
+        while (selected < scroll)
+          scroll--;
 
-            tui::utils::print_videos(videos, selected, width, height, scroll);
-        }
+        tui::utils::print_videos(videos, selected, width, height, scroll);
 
         tui::utils::print_footer("[tab] change tab [q] quit [r] refresh [d] unsubscribe [c] view channel", width);
     }
@@ -178,7 +176,6 @@ namespace tui::tabs::subscriptions {
             request_update = false;
             terminal::clear();
 
-            printf("%s", "playing video...\n");
             last_action = "played " + videos[selected].title;
             request_update = true;
             std::string cmd = config::playcmd_start

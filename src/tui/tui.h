@@ -108,14 +108,12 @@ namespace tui {
                     continue;
             }
 
-            terminal::clear();
-
             if (current_tab == e_tab_page::search)
-                tabs::search::draw(old_terminal_width, old_terminal_height - 1);
+                tabs::search::draw(old_terminal_width, old_terminal_height);
             else if (current_tab == e_tab_page::popular)
-                tabs::popular::draw(old_terminal_width, old_terminal_height - 1);
+                tabs::popular::draw(old_terminal_width, old_terminal_height);
             else if (current_tab == e_tab_page::subs)
-                tabs::subscriptions::draw(old_terminal_width, old_terminal_height - 1);
+              tabs::subscriptions::draw(old_terminal_width, old_terminal_height);
 
             fflush(stdout);
         }
