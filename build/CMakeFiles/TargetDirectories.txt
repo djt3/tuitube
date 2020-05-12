@@ -1,7 +1,0 @@
-/home/dan/repos/tuitube/build/CMakeFiles/install/strip.dir
-/home/dan/repos/tuitube/build/CMakeFiles/install/local.dir
-/home/dan/repos/tuitube/build/CMakeFiles/edit_cache.dir
-/home/dan/repos/tuitube/build/CMakeFiles/tuitube.dir
-/home/dan/repos/tuitube/build/CMakeFiles/rebuild_cache.dir
-/home/dan/repos/tuitube/build/CMakeFiles/list_install_components.dir
-/home/dan/repos/tuitube/build/CMakeFiles/install.dir

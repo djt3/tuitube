@@ -1,1 +1,0 @@
-/usr/bin/c++   -pthread -Iinclude   CMakeFiles/tuitube.dir/src/main.cpp.o  -o tuitube  -lcurlpp -lcurl 
