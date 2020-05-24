@@ -56,6 +56,12 @@ namespace invidious {
               str.replace(pos, 3, "...");
               pos = str.find("…");
             }
+
+            pos = str.find("’");
+            while (pos != std::string::npos) {
+              str.replace(pos, 3, "'");
+              pos = str.find("’");
+            }
         }
     };
 }
