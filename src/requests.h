@@ -58,7 +58,6 @@ namespace requests {
             response = response.substr(index + 2);
             index = response.find('<');
             video.title = response.substr(0, index);
-            video.cleanup_title();
 
             if (override_channel_url == "") {
                 index = response.find("channel/");
@@ -104,6 +103,7 @@ namespace requests {
                 continue;
             }
 
+            video.cleanup_text();
             videos.push_back(video);
         }
 

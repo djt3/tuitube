@@ -21,28 +21,28 @@ namespace tui::utils {
     for (int i = 0; i < draw_queue.size(); i++) {
       if (force_update || width != last_width || (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) || ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
 
-      if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected) {
-        terminal::set_background_color(terminal::e_color::white);
-        terminal::set_text_color(terminal::e_color::black);
-      }
+        if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected) {
+          terminal::set_background_color(terminal::e_color::white);
+          terminal::set_text_color(terminal::e_color::black);
+        }
 
-      terminal::move_cursor(0, i + 1);
-      if (!draw_queue[i].empty()) {
-        printf("%s", draw_queue[i].c_str());
+        terminal::move_cursor(0, i + 1);
+        if (!draw_queue[i].empty()) {
+          printf("%s", draw_queue[i].c_str());
 
-        for (int j = 0; j < width - draw_queue[i].size(); j++)
-          printf(" ");
-        if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected)
+          for (int j = 0; j < width - draw_queue[i].size(); j++)
+            printf(" ");
+          if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected)
+            terminal::reset();
+        }
+        else {
           terminal::reset();
-      }
-      else {
-        terminal::reset();
-        for (int j = 0; j < width - draw_queue[i].size(); j++)
-          printf(" ");
-      }
+          for (int j = 0; j < width - draw_queue[i].size(); j++)
+            printf(" ");
+        }
 
-      //if (1 != draw_queue.size() - 1)
-      //printf("\n");
+        //if (1 != draw_queue.size() - 1)
+        //printf("\n");
     }
     }
 

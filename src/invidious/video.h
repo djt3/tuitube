@@ -16,29 +16,45 @@ namespace invidious {
         std::string length;
         uint64_t time;
 
-        void cleanup_title() {
-            auto pos = title.find("&quot;");
+        void cleanup_text() {
+          cleanup_str(title);
+          cleanup_str(channel_name);
+        }
+
+        void cleanup_str(std::string& str) {
+            auto pos = str.find("&quot;");
             while (pos != std::string::npos) {
-                title.replace(pos, 6, "\"");
-                pos = title.find("&quot;");
+                str.replace(pos, 6, "\"");
+                pos = str.find("&quot;");
             }
 
-            pos = title.find("&#");
+            pos = str.find("&#");
             while (pos != std::string::npos) {
-                if (title[pos + 4] == ';') {
-                    char character = std::stoi(title.substr(pos + 2, 2));
-                    title.replace(pos, 5, std::string(character, 1));
+                if (str[pos + 4] == ';') {
+                    char character = std::stoi(str.substr(pos + 2, 2));
+                    str.replace(pos, 5, std::string(character, 1));
                 } else
                     break;
-                
-                pos = title.find("&#");
+
+                pos = str.find("&#");
             }
 
-            pos = title.find("&amp;");
+            pos = str.find("&amp;");
             while (pos != std::string::npos) {
-                title.replace(pos, 5, "&");
+                str.replace(pos, 5, "&");
+                pos = str.find("&amp;");
+            }
 
-                pos = title.find(" &amp;");
+            pos = str.find("–");
+            while (pos != std::string::npos) {
+              str.replace(pos, 3, "-");
+              pos = str.find("–");
+            }
+
+            pos = str.find("…");
+            while (pos != std::string::npos) {
+              str.replace(pos, 3, "...");
+              pos = str.find("…");
             }
         }
     };
