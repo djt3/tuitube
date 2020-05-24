@@ -18,7 +18,7 @@ namespace tui::tabs::search {
         static std::string last_action = "";
         static bool awaiting_search = false;
         static bool request_update = false;
-        static bool force_update = false;
+        static bool force_update = true;
         static int selected = 0;
         static int scroll = 0;
         static std::vector<invidious::c_video> videos;
@@ -68,6 +68,12 @@ namespace tui::tabs::search {
 
         tui::utils::print_videos(videos, selected, width, height, scroll);
 
+        if (searched)
+          tui::utils::print_footer("[tab] change tab [s] show searchbox [a] subscribe [c] view channel", width, force_update);
+        else
+          tui::utils::print_footer("[tab] change tab [enter] search", width, force_update);
+
+        // draw the search box
         if (!searched) {
           int i;
           terminal::move_cursor(0, height / 2);
@@ -80,11 +86,6 @@ namespace tui::tabs::search {
           printf("%s", text.c_str());
         }
 
-
-        if (searched)
-          tui::utils::print_footer("[tab] change tab [s] show searchbox [a] subscribe [c] view channel", width, force_update);
-        else
-          tui::utils::print_footer("[tab] change tab [enter] search", width, force_update);
         force_update = false;
     }
 
