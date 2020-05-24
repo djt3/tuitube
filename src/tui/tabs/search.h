@@ -61,7 +61,7 @@ namespace tui::tabs::search {
             return;
         }
 
-        while (selected > height + scroll - 2)
+        while (selected > height + scroll - 3)
           scroll++;
         while (selected < scroll)
           scroll--;

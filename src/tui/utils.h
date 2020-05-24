@@ -19,7 +19,7 @@ namespace tui::utils {
 
   static void print_draw_queue(bool force_update) {
     for (int i = 0; i < draw_queue.size(); i++) {
-      if (force_update || width != last_width || (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) || ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
+      if (force_update || width != last_width || draw_queue[i] != last_draw_queue[i] || ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
 
         if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected) {
           terminal::set_background_color(terminal::e_color::white);
@@ -72,10 +72,10 @@ namespace tui::utils {
     if (videos.empty())
       return;
 
-    int max = std::min(height + scroll - 1, static_cast<int>(videos.size()));
+    int max = std::min(height + scroll - 0, static_cast<int>(videos.size()));
 
     last_selected = selected;
-    selected = new_selected;
+    selected = new_selected - scroll;
 
     for (int i = scroll; i < max; i++) {
       const auto &video = videos[i];
