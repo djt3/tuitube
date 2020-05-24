@@ -13,13 +13,17 @@ namespace tui::utils {
     static int last_width = -1;
     static int selected = 0;
     static int last_selected = -1;
+    static int last_height = -1;
+    static int height;
     static std::vector<std::string> draw_queue = {""};
     static std::vector<std::string> last_draw_queue = {};
   }
 
   static void print_draw_queue(bool force_update) {
     for (int i = 0; i < draw_queue.size(); i++) {
-      if (force_update || width != last_width || (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) || ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
+      if (force_update || i > last_draw_queue.size() || height != last_height ||
+      (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) ||
+      ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
 
         if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected) {
           terminal::set_background_color(terminal::e_color::white);
@@ -43,7 +47,7 @@ namespace tui::utils {
 
         //if (1 != draw_queue.size() - 1)
         //printf("\n");
-    }
+      }
     }
 
     last_draw_queue = draw_queue;
@@ -62,11 +66,15 @@ namespace tui::utils {
       formatted_title = formatted_title.substr(0, width - 3) + "...";
 
     draw_queue.push_back(formatted_title);
-
   }
 
   static void print_videos(const std::vector<invidious::c_video>& videos,
-                           int new_selected, int width, int height, int scroll) {
+                           int new_selected, int width, int new_height, int scroll) {
+      last_height = height;
+      height = new_height;
+      if (height != last_height)
+          terminal::clear(true);
+
     draw_queue.resize(height);
 
     if (videos.empty())

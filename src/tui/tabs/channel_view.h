@@ -35,7 +35,7 @@ namespace tui::tabs {
         }
 
         void draw(const int &width, const int &height) {
-          while (selected > height + scroll - 2)
+          while (selected > height + scroll - 3)
             scroll++;
           while (selected < scroll)
             scroll--;
