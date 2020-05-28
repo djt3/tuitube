@@ -93,10 +93,6 @@ namespace tui::tabs::search {
     static void handle_input(const char& input) {
         request_update = true;
 
-        if (input == 'a' && !videos.empty()) {
-            subscriptions::add_sub(videos[selected]);
-            last_action = "subscribed to " + videos[selected].channel_url;
-        }
 
         if (view_channel) {
             if (input == 'b')
@@ -108,7 +104,12 @@ namespace tui::tabs::search {
         }
 
         if (searched) {
-            if (input == 10 && !videos.empty()) { // enter
+          if (input == 'a' && !videos.empty()) {
+            subscriptions::add_sub(videos[selected]);
+            last_action = "subscribed to " + videos[selected].channel_url;
+          }
+
+          else if (input == 10 && !videos.empty()) { // enter
                 request_update = false;
                 terminal::clear();
 
