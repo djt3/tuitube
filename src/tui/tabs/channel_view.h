@@ -42,20 +42,23 @@ namespace tui::tabs {
 
           tui::utils::print_videos(videos, selected, width, height, scroll);
 
-          tui::utils::print_footer("[tab] change tab [b] back [a] subscribe [c] view channel", width, force_update);
+          tui::utils::print_footer("[tab] change tab [s] play sound only [b] back [a] subscribe [c] view channel", width, force_update);
           force_update = false;
         }
 
         bool handle_input(const char &input) {
             request_update = true;
 
-            if (input == 10 && !videos.empty()) { // enter - open video
+            if (input == 10 || input == 's' && !videos.empty()) { // enter - open video
                 request_update = false;
                 terminal::clear();
 
                 last_action = "played " + videos[selected].title;
                 request_update = true;
-                utils::play_video(videos[selected]);
+                if (input == 10)
+                  utils::play_video(videos[selected]);
+                else
+                  utils::play_audio(videos[selected]);
                 force_update = true;
                 request_update = true;
             } else if (input == 'a' && !videos.empty()) { // a - subscribe

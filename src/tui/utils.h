@@ -113,11 +113,22 @@ namespace tui::utils {
 
   static void play_video(const invidious::c_video& video) {
     std::string cmd = config::playcmd_start
-      + requests::extract_video_link(video)
+      + requests::extract_video_link(video.url)
       + config::playcmd_end;
 
     system(cmd.c_str());
   }
+
+  static void play_audio(const invidious::c_video& video) {
+    std::string cmd = config::playcmd_start
+      + requests::extract_video_link(video.url + "&listen=1")
+      + config::playcmd_end;
+
+    system(cmd.c_str());
+  }
+
+
+
 }
 
 #endif //TUITUBE_UTILS_H

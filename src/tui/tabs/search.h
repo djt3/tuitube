@@ -69,7 +69,7 @@ namespace tui::tabs::search {
         tui::utils::print_videos(videos, selected, width, height, scroll);
 
         if (searched)
-          tui::utils::print_footer("[tab] change tab [s] show searchbox [a] subscribe [c] view channel", width, force_update);
+          tui::utils::print_footer("[tab] change tab [s] sound only [b] show searchbox [a] subscribe [c] view channel", width, force_update);
         else
           tui::utils::print_footer("[tab] change tab [enter] search", width, force_update);
 
@@ -109,16 +109,19 @@ namespace tui::tabs::search {
             last_action = "subscribed to " + videos[selected].channel_url;
           }
 
-          else if (input == 10 && !videos.empty()) { // enter
+          else if (input == 10 || input == 's' && !videos.empty()) { // enter
                 request_update = false;
                 terminal::clear();
 
                 last_action = "played " + videos[selected].title;
                 request_update = true;
-                utils::play_video(videos[selected]);
+                if (input == 10)
+                  utils::play_video(videos[selected]);
+                else
+                  utils::play_audio(videos[selected]);
                 force_update = true;
                 request_update = true;
-            } else if (input == 's') { // s - back
+            } else if (input == 'b') { // b - back
                 awaiting_search = false;
                 searched = false;
                 terminal::clear(true);

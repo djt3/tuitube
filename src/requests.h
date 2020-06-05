@@ -110,8 +110,8 @@ namespace requests {
         return videos;
     }
 
-    std::string extract_video_link(const invidious::c_video& video) {
-        std::string full_url = config::invidious_instance + video.url;
+    std::string extract_video_link(const std::string& url) {
+        std::string full_url = config::invidious_instance + url;
         std::string response = make_request(full_url);
 
         auto index = response.find("<source");
