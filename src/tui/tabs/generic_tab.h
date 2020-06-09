@@ -26,7 +26,7 @@ namespace tui::tabs {
     std::vector<invidious::c_video> videos;
     std::string last_action = "";
     std::string title;
-    std::string footer = "[tab] change tab [q] quit [enter] play [a] audio only";
+    std::string footer = "[tab] change tab [q] quit [enter] play [a] audio only [c] view channel";
     c_channel_view channel_view;
 
     bool can_subscribe = true;

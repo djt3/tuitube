@@ -9,11 +9,7 @@
 
 namespace tui::tabs {
   class c_popular_tab : public c_generic_tab {
-  private:
-    bool searched;
-    std::string search_text = "";
   public:
-
     c_popular_tab() {
       title = "popular";
       generate_footer();
