@@ -21,7 +21,7 @@ A minimal tui youtube (invidious) frontend made in c++
 - Removing all calls to system("clear") for smoother navigation
 
 ## Known bugs:
-- Terminal goes blank if switching tabs too fast
+- None, please create an issue if you find any or have a feature suggestion
 
 ## Installing
 Kiss linux:
@@ -38,7 +38,7 @@ Install dependancies and
 
 `git clone https://github.com/djt3/tuitube && cd tuitube`
 
-`cmake . && make && make install`
+`cmake . && sudo make install`
 
 ## How to change subscriptions manually:
 The file is at "~/.config/tuitube_subs", add as "{channel id / name}" from the channel url, with one per line.
