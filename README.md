@@ -21,7 +21,7 @@ A minimal tui youtube (invidious) frontend made in c++
 - Removing all calls to system("clear") for smoother navigation
 
 ## Known bugs:
-- None currently, if you have a bug report or suggestion please make an issue
+- Terminal goes blank if switching tabs too fast
 
 ## Installing
 Kiss linux:
