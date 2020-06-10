@@ -96,7 +96,7 @@ namespace tui::tabs {
 
       if (input == 's' && can_subscribe && !videos.empty()) { // a - subscribe
         invidious::subs::add_sub(videos[selected]);
-        last_action = "subscribed to " + videos[selected].channel_url;
+        last_action = "subscribed to " + videos[selected].channel_name;
         return;
       }
 
