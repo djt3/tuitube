@@ -1,7 +1,3 @@
-//
-// Created by dan on 29/04/2020.
-//
-
 #ifndef TUITUBE_UTILS_H
 #define TUITUBE_UTILS_H
 
@@ -22,8 +18,8 @@ namespace tui::utils {
   static void print_draw_queue(bool force_update) {
     for (int i = 0; i < draw_queue.size(); i++) {
       if (force_update || i > last_draw_queue.size() || height != last_height ||
-      (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) ||
-      ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
+          (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) ||
+          ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
 
         if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected) {
           terminal::set_background_color(terminal::e_color::white);
@@ -68,27 +64,36 @@ namespace tui::utils {
     draw_queue.push_back(formatted_title);
   }
 
-  static void print_videos(const std::vector<invidious::c_video>& videos,
-                           int new_selected, int width, int new_height, int scroll) {
-      last_height = height;
-      height = new_height;
-      if (height != last_height)
-          terminal::clear(true);
+  static void print_generic(int new_selected, int width, int new_height, int scroll) {
+    last_height = height;
+    height = new_height;
+    if (height != last_height)
+      terminal::clear(true);
 
     draw_queue.resize(height);
+
+    last_selected = selected;
+    selected = new_selected - scroll;
+  }
+
+  static void print_videos(const std::vector<invidious::c_video>& videos,
+                           int new_selected, int width, int new_height, int scroll,
+                           bool channel_only = false) {
+    print_generic(new_selected, width, new_height, scroll);
 
     if (videos.empty())
       return;
 
     int max = std::min(height + scroll - 1, static_cast<int>(videos.size()));
 
-    last_selected = selected;
-    selected = new_selected - scroll;
-
     for (int i = scroll; i < max; i++) {
       const auto &video = videos[i];
 
-      std::string text = video.channel_name + " - " + video.title + " - " + video.time_str + " - " + video.length;
+      std::string text;
+      if (!channel_only)
+        text = video.channel_name + " - " + video.title + " - " + video.time_str + " - " + video.length;
+      else
+        text = video.channel_name;
 
       if (text.size() > width)
         text = text.substr(0, width - 3) + "...";
@@ -126,9 +131,6 @@ namespace tui::utils {
 
     system(cmd.c_str());
   }
-
-
-
 }
 
 #endif //TUITUBE_UTILS_H

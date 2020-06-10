@@ -20,11 +20,16 @@
 
 namespace tui::tabs {
   class c_subscriptions_tab : public c_generic_tab {
+  private:
+    bool viewing_sublist = false;
+    std::vector<invidious::c_video> channel_videos;
+
   public:
     c_subscriptions_tab() {
       title = "subscriptions";
       can_subscribe = false;
       custom_actions.push_back(action("unsubscribe", 'u', nullptr));
+      custom_actions.push_back(action("view sublist", 'l', nullptr));
       generate_footer();
     }
 
@@ -84,18 +89,58 @@ namespace tui::tabs {
     }
 
     void draw(const int &width, const int &height) {
-      c_generic_tab::draw(width, height);
+      if (viewing_sublist) {
+        tui::utils::print_title("sublist", width, last_action);
+
+        if (view_channel) {
+          channel_view.draw(width, height);
+          return;
+        }
+
+        while (selected > height + scroll - 3)
+          scroll++;
+        while (selected < scroll)
+          scroll--;
+
+        tui::utils::print_videos(channel_videos, selected, width, height, scroll, true);
+
+        tui::utils::print_footer(footer, width, force_update);
+        force_update = false;
+      }
+
+      else
+        c_generic_tab::draw(width, height);
     }
 
     void handle_input(const char &input) {
       request_update = true;
       if (input == 'u' && !videos.empty()) {
-        invidious::subs::write_subs(videos[selected].channel_url);
-        last_action = "deleted " + videos[selected].channel_name;
-        return;
-      }
+        if (!viewing_sublist) {
+          invidious::subs::write_subs(videos[selected].channel_url);
+          last_action = "deleted " + videos[selected].channel_name;
+        } else {
+          invidious::subs::write_subs(channel_videos[selected].channel_url);
+          last_action = "deleted " + channel_videos[selected].channel_name;
+        }
+      } else if (input == 'l') {
+        viewing_sublist = !viewing_sublist;
+        request_update = true;
+        selected = 0;
+        channel_videos.clear();
 
-      c_generic_tab::handle_input(input);
+        std::vector<std::string> channels_added;
+
+        for (int i = 0; i < videos.size(); i++) {
+          std::string text = videos[i].channel_name;
+
+          if (std::find(channels_added.begin(), channels_added.end(), text) == channels_added.end()) {
+            channel_videos.push_back(videos[i]);
+            channels_added.push_back(text);
+          }
+        }
+
+      } else
+        c_generic_tab::handle_input(input);
     }
   };
 }
