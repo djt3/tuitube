@@ -28,11 +28,15 @@ namespace tui::utils {
         }
 
         terminal::move_cursor(0, i + 1);
+
+        for (int j = 0; j < width; j++)
+          printf(" ");
+
+        terminal::move_cursor(0, i + 1);
+
         if (!draw_queue[i].empty()) {
           printf("%s", draw_queue[i].c_str());
 
-          for (int j = draw_queue[i].size(); j < width - draw_queue_right[i].size(); j++)
-            printf(" ");
 
           if (!draw_queue_right[i].empty()) {
             terminal::move_cursor(width - draw_queue_right[i].size() + 1, i + 1);

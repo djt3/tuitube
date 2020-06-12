@@ -32,6 +32,7 @@ namespace tui::tabs {
       // draw the search box
       if (!searched) {
         tui::utils::print_title("search", width , last_action);
+        tui::utils::print_generic(0, width, height, scroll);
         tui::utils::print_footer("[tab] change tab [enter] search", width, force_update);
 
         int i;
