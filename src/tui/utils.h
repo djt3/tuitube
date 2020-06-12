@@ -12,6 +12,7 @@ namespace tui::utils {
     static int last_height = -1;
     static int height;
     static std::vector<std::string> draw_queue = {""};
+    static std::vector<std::string> draw_queue_right = {""};
     static std::vector<std::string> last_draw_queue = {};
   }
 
@@ -30,8 +31,14 @@ namespace tui::utils {
         if (!draw_queue[i].empty()) {
           printf("%s", draw_queue[i].c_str());
 
-          for (int j = 0; j < width - draw_queue[i].size(); j++)
+          for (int j = draw_queue[i].size(); j < width - draw_queue_right[i].size(); j++)
             printf(" ");
+
+          if (!draw_queue_right[i].empty()) {
+            terminal::move_cursor(width - draw_queue_right[i].size() + 1, i + 1);
+              printf("%s", draw_queue_right[i].c_str());
+          }
+
           if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected)
             terminal::reset();
         }
@@ -71,6 +78,7 @@ namespace tui::utils {
       terminal::clear(true);
 
     draw_queue.resize(height);
+    draw_queue_right.resize(height);
 
     last_selected = selected;
     selected = new_selected - scroll;
@@ -90,8 +98,16 @@ namespace tui::utils {
       const auto &video = videos[i];
 
       std::string text;
-      if (!channel_only)
-        text = video.channel_name + " - " + video.title + " - " + video.time_str + " - " + video.length;
+      std::string right_text;
+      if (!channel_only) {
+        text = video.channel_name + " - " + video.title;
+        right_text = video.length + " - " + video.time_str;
+
+        if (text.size() + right_text.size() > width) {
+          text = text + " - " + right_text;
+          right_text = "";
+        }
+      }
       else
         text = video.channel_name;
 
@@ -99,6 +115,7 @@ namespace tui::utils {
         text = text.substr(0, width - 3) + "...";
 
       draw_queue[i - scroll + 1] = text;
+      draw_queue_right[i - scroll + 1] = right_text;
     }
   }
 
