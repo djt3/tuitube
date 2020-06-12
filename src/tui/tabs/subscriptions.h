@@ -122,7 +122,7 @@ namespace tui::tabs {
           invidious::subs::write_subs(channel_videos[selected].channel_url);
           last_action = "deleted " + channel_videos[selected].channel_name;
         }
-      } else if (input == 'l') {
+      } else if (input == 'l' && !videos.empty()) {
         viewing_sublist = !viewing_sublist;
         request_update = true;
         selected = 0;
@@ -141,6 +141,9 @@ namespace tui::tabs {
 
       } else
         c_generic_tab::handle_input(input);
+
+      if (viewing_sublist && selected >= channel_videos.size())
+          selected = channel_videos.size() - 1;
     }
   };
 }

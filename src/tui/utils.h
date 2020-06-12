@@ -108,8 +108,10 @@ namespace tui::utils {
           right_text = "";
         }
       }
-      else
+      else {
         text = video.channel_name;
+        right_text = video.time_str;
+      }
 
       if (text.size() > width)
         text = text.substr(0, width - 3) + "...";
