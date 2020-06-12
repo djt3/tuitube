@@ -139,8 +139,19 @@ namespace tui::tabs {
           }
         }
 
-      } else
+      }
+      else if (input == 10 && viewing_sublist) {
+        view_channel = true;
+        last_action = "view channel " + videos[selected].channel_name;
+        channel_view = c_channel_view(channel_videos[selected]);
+        std::thread refresh_thread([&]{channel_view.refresh_videos();});
+        refresh_thread.detach();
+      }
+      else
         c_generic_tab::handle_input(input);
+
+      if (input == 'r' && viewing_sublist)
+        viewing_sublist = false;
 
       if (viewing_sublist && selected >= channel_videos.size())
           selected = channel_videos.size() - 1;
