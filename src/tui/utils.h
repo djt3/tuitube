@@ -137,6 +137,7 @@ namespace tui::utils {
     draw_queue.back() = str;
 
     print_draw_queue(force_update);
+    terminal::move_cursor(width, height);
   }
 
   static void play_video(const invidious::c_video& video) {
