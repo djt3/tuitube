@@ -143,7 +143,6 @@ namespace tui::utils {
   static void play_video(const invidious::c_video& video) {
     terminal::clear(true);
     printf("Playing video %s...\n", video.title.c_str());
-    terminal::move_cursor(1,0);
 
     std::string cmd = config::playcmd_start
       + requests::extract_video_link(video.url)
@@ -155,7 +154,6 @@ namespace tui::utils {
   static void play_audio(const invidious::c_video& video) {
     terminal::clear(true);
     printf("Playing audio %s...\n", video.title.c_str());
-    terminal::move_cursor(1,0);
 
     std::string cmd = config::playcmd_start
       + requests::extract_video_link(video.url + "&listen=1")
