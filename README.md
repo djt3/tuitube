@@ -1,6 +1,8 @@
 # tuitube
 A minimal tui youtube (invidious) frontend made in c++
 
+https://gitlab.com/djt3/tuitube
+
 ## Dependancies:
 - mpv (can be changed in config.h)
 - curlpp
