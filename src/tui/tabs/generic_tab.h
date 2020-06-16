@@ -26,7 +26,7 @@ namespace tui::tabs {
     std::vector<invidious::c_video> videos;
     std::string last_action = "";
     std::string title;
-    std::string footer = "[tab] change tab [q] quit [enter] play [a] audio only [c] view channel";
+    std::string footer = "[tab] change tab [q] quit [enter] play [a] audio only [c] view channel [d] show url";
     c_channel_view channel_view;
 
     bool can_subscribe = true;
@@ -119,7 +119,16 @@ namespace tui::tabs {
           utils::play_video(videos[selected]);
         else
           utils::play_audio(videos[selected]);
+        terminal::clear(true);
         request_update = true;
+        force_update = true;
+      } else if (input == 'd' && !videos.empty()) {
+        request_update = false;
+        terminal::clear();
+
+        last_action = "show url of " + videos[selected].title;
+        request_update = false;
+        utils::print_url(videos[selected]);
         force_update = true;
       } else if (input == 'r' && can_refresh && last_action != "refreshing...") { // r - refresh
         std::thread refresh_thread(&c_generic_tab::refresh_videos, this);

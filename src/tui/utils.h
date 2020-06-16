@@ -161,6 +161,13 @@ namespace tui::utils {
 
     system(cmd.c_str());
   }
+
+  static void print_url(const invidious::c_video& video) {
+    terminal::clear(true);
+    std::string url = requests::extract_video_link(video.url);
+    terminal::move_cursor(0, 4);
+    printf("video url: %s\n", url.c_str());
+  }
 }
 
 #endif //TUITUBE_UTILS_H

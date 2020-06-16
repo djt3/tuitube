@@ -42,7 +42,7 @@ namespace tui::tabs {
 
           tui::utils::print_videos(videos, selected, width, height, scroll);
 
-          tui::utils::print_footer("[tab] change tab [s] play sound [s] subscribe [c] back", width, force_update);
+          tui::utils::print_footer("[tab] change tab [s] play sound [s] subscribe [c] back [d] show url", width, force_update);
           force_update = false;
         }
 
@@ -59,8 +59,17 @@ namespace tui::tabs {
                   utils::play_video(videos[selected]);
                 else
                   utils::play_audio(videos[selected]);
+                terminal::clear(true);
                 force_update = true;
                 request_update = true;
+            } else if (input == 'd' && !videos.empty()) {
+              request_update = false;
+              terminal::clear();
+
+              last_action = "show url of " + videos[selected].title;
+              request_update = false;
+              utils::print_url(videos[selected]);
+              force_update = true;
             } else if (input == 'a' && !videos.empty()) { // a - subscribe
                 last_action = "subscribed to " + videos[selected].channel_url;
                 return true;
