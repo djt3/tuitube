@@ -26,6 +26,7 @@ namespace tui::tabs {
       std::replace(search_url.begin(), search_url.end(), ' ', '+');
       videos = requests::extract_videos(search_url);
       c_generic_tab::refresh_videos();
+      last_action = search_text;
     }
 
     void draw(const int& width, const int& height) {
