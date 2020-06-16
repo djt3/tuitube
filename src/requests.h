@@ -35,6 +35,18 @@ namespace requests {
 
         std::vector<invidious::c_video> videos {};
 
+        bool is_channel_page = response.find("channel-profile") != std::string::npos;
+        std::string channel_page_name = "";
+
+        if (is_channel_page) {
+          auto index = response.find("channel-profile");
+          std::string temp_response = response.substr(index);
+          index = temp_response.find("<span>") + 6;
+          temp_response = temp_response.substr(index);
+          auto end_index = temp_response.find("</span>");
+          channel_page_name = temp_response.substr(0, end_index);
+        }
+
         std::size_t index = 1;
         while (true) {
             index = response.find("<p class=\"length\">");
@@ -68,10 +80,15 @@ namespace requests {
                 video.channel_url = override_channel_url;
             }
 
+            if (!is_channel_page) {
             index = response.find("\">");
             response = response.substr(index + 2);
             index = response.find('<');
             video.channel_name = response.substr(0, index);
+            }
+            else {
+              video.channel_name = channel_page_name;
+            }
 
             // calculate time
             index = response.find("<div class=");

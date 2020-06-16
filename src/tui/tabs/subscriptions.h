@@ -9,6 +9,7 @@
 #include <filesystem>
 #include <fstream>
 #include <mutex>
+#include <algorithm>
 
 #include "../../invidious/video.h"
 #include "../../invidious/subs.h"
@@ -80,7 +81,7 @@ namespace tui::tabs {
         return;
       }
 
-      auto sort_fn = [](const invidious::c_video &v1, const invidious::c_video &v2) {
+      auto sort_fn = [](const invidious::c_video &v1, const invidious::c_video &v2) -> bool {
                        return v1.time < v2.time;
                      };
       std::sort(videos.begin(), videos.end(), sort_fn);
@@ -137,6 +138,11 @@ namespace tui::tabs {
             channel_videos.push_back(videos[i]);
             channels_added.push_back(text);
           }
+
+          auto sort_fn = [](const invidious::c_video &v1, const invidious::c_video &v2) -> bool {
+                           return v1.channel_name < v2.channel_name;
+                         };
+          std::sort(channel_videos.begin(), channel_videos.end(), sort_fn);
         }
 
       }
