@@ -42,7 +42,7 @@ namespace tui::tabs {
 
           tui::utils::print_videos(videos, selected, width, height, scroll);
 
-          tui::utils::print_footer("[tab] change tab [s] play sound [s] subscribe [b] back", width, force_update);
+          tui::utils::print_footer("[tab] change tab [s] play sound [s] subscribe [c] back", width, force_update);
           force_update = false;
         }
 

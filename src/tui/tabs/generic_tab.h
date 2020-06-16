@@ -101,7 +101,7 @@ namespace tui::tabs {
       }
 
       if (view_channel) {
-        if (input == 'b')
+        if (input == 'c')
           view_channel = false;
         else
           channel_view.handle_input(input);
