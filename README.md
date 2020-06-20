@@ -4,7 +4,7 @@ A minimal tui youtube (invidious) frontend made in c++
 https://gitlab.com/djt3/tuitube
 
 ## Dependancies:
-- mpv (can be changed in config.h)
+- mpv (can be changed in config.h) (mpv MUST be built with "luajit", else check the comments in config.h)
 - curlpp
 
 ## What's working:
@@ -44,7 +44,5 @@ Install dependancies and
 
 ## How to change subscriptions manually:
 The file is at "~/.config/tuitube_subs", add as "{channel id / name}" from the channel url, with one per line.
-
-If your mpv can't play web links, check the comments in config.h (note, requires youtube-dl).
 
 ![Screenshot](https://github.com/djt3/tuitube/blob/master/tuitube.png?raw=true)
