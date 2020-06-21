@@ -42,7 +42,4 @@ Install dependancies and
 
 `cmake . && sudo make install`
 
-## How to change subscriptions manually:
-The file is at "~/.config/tuitube_subs", add as "{channel id / name}" from the channel url, with one per line.
-
 ![Screenshot](https://github.com/djt3/tuitube/blob/master/tuitube.png?raw=true)
