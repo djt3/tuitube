@@ -20,7 +20,6 @@ https://gitlab.com/djt3/tuitube
 - Include channel / playlist / mix results in search
 - Suggested videos
 - Auto invidious instance selector
-- Removing all calls to system("clear") for smoother navigation
 
 ## Known bugs:
 - None, please create an issue if you find any or have a feature suggestion
