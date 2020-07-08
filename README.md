@@ -31,7 +31,7 @@ Kiss linux:
 
 Arch based (arch, manjaro, artix):
 
-`{aur helper} -S tuitube`
+`{aur helper} -S tuitube-git`
 
 Other:
 
