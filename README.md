@@ -4,7 +4,7 @@ A minimal tui youtube (invidious) frontend made in c++
 https://gitlab.com/djt3/tuitube
 
 ## Dependancies:
-- mpv (can be changed in config.h) (mpv MUST be built with "luajit", else check the comments in config.h)
+- mpv (can be changed in config.h) (mpv MUST be built with "luajit" (default in arch), else check the comments in config.h)
 - curlpp
 
 ## What's working:
