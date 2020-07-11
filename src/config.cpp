@@ -1,4 +1,5 @@
 #include "config.h"
+#include "invidious/instances.h"
 #include <fstream>
 
 namespace config {
@@ -15,8 +16,11 @@ namespace config {
       config[key] = value;
     }
 
+    // default values
     if (config.find(std::string("Invidious Instance")) == config.end())
-      config[std::string("Invidious Instance")] = "invidious.snopyta.org";
+      config[std::string("Invidious Instance")] = "fastest";
+    if (config.find(std::string("Instance For Popular Videos")) == config.end())
+      config[std::string("Instance For Popular Videos")] = "invidious.snopyta.org";
     if (config.find(std::string("Video Source")) == config.end())
       config[std::string("Video Source")] = "Invidious";
   }
@@ -24,6 +28,11 @@ namespace config {
   std::string get_value(const std::string& key) {
     if (config[key].empty())
       config[key] = "0";
+
+    if (config[key] == "fastest") {
+      return invidious::instances::get_fastest_instance();
+    }
+
     return config[key];
   }
 

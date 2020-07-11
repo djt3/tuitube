@@ -10,23 +10,27 @@
 #include "config.h"
 
 namespace requests {
-  namespace  {
-    std::string make_request(const std::string& url) {
-      curlpp::Cleanup myCleanup;
-      std::stringstream result;
+  std::string make_request(const std::string& url) {
+    curlpp::Cleanup myCleanup;
+    std::stringstream result;
 
-      curlpp::Easy request;
-      request.setOpt(cURLpp::Options::WriteStream(&result));
-      request.setOpt<curlpp::options::Url>(url);
-      request.perform();
+    curlpp::Easy request;
+    request.setOpt(cURLpp::Options::WriteStream(&result));
+    request.setOpt<curlpp::options::Url>(url);
+    request.perform();
 
-      return result.str();
-    }
+    return result.str();
   }
 
   std::vector<invidious::c_video> extract_videos(const std::string& url,
-                                                 const std::string& override_channel_url = "") {
-    std::string full_url = "https://" + config::get_value("Invidious Instance") + url;
+                                                 const std::string& override_channel_url = "",
+                                                 bool is_popular_tab = false) {
+    std::string full_url = "";
+    if (!is_popular_tab)
+      full_url = "https://" + config::get_value("Invidious Instance") + url;
+    else
+      full_url = "https://" + config::get_value("Instance For Popular Videos") + url;
+
     std::string response = make_request(full_url);
 
     std::vector<invidious::c_video> videos {};

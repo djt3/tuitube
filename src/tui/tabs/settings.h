@@ -4,6 +4,7 @@
 #include <fstream>
 
 #include "../utils.h"
+#include "../../invidious/instances.h"
 #include "channel_view.h"
 #include "generic_tab.h"
 
@@ -17,6 +18,8 @@ namespace tui::tabs {
       name(name), options(options) {}
 
     std::pair<std::string, std::string> to_string() {
+      if (config::config[name] == "fastest")
+        return std::make_pair(name, "fastest (" + config::get_value(name) + ")");
       return std::make_pair(name, config::get_value(name));
     }
 
@@ -32,8 +35,9 @@ namespace tui::tabs {
     std::vector<c_dropdown> options;
   public:
     c_settings_tab() {
-      options.push_back(c_dropdown("Invidious Instance", {"invidious.snopyta.org", "invidio.us"}));
-      options.push_back(c_dropdown("Video Source", {"Invidious", "YouTube"}));
+      options.push_back(c_dropdown("Invidious Instance", {"fastest", "invidious.snopyta.org", "invidio.us", "invidious.13ad.de"}));
+      options.push_back(c_dropdown("Instance For Popular Videos", invidious::instances::instances));
+      options.push_back(c_dropdown("Video Source", {"invidious", "youtube (better quality)"}));
     }
 
     void refresh_videos() { }
