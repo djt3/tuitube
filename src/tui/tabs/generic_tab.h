@@ -14,7 +14,6 @@ namespace tui::tabs {
     void (*fn)();
   };
 
-
   class c_generic_tab {
     public:
     bool request_update = false;
@@ -143,9 +142,13 @@ namespace tui::tabs {
       } else if (input == 65 || input == 'k') { // up
         if (selected > 0)
           selected--;
+        else
+          request_update = false;
       } else if (input == 66 || input == 'j') { // down
         if (selected < videos.size() - 1)
           selected++;
+        else
+          request_update = false;
       } else {
         for (auto& action : custom_actions) {
           if (input == action.key) {

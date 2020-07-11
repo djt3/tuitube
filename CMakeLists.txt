@@ -10,7 +10,7 @@ set(CMAKE_SHARED_LINKER_FLAGS "-L/usr/lib -Wl,-O1,--sort-common,--as-needed,-z,r
 include(FindPkgConfig)
 pkg_check_modules(CURLPP REQUIRED curlpp)
 
-add_executable(tuitube src/main.cpp )
+add_executable(tuitube src/main.cpp src/config.cpp)
 target_link_libraries(tuitube ${CURLPP_LDFLAGS})
 
 install(TARGETS ${PROJECT_NAME})

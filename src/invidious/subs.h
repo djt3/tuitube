@@ -3,7 +3,7 @@
 
 namespace invidious::subs {
   static std::vector<std::string> channels;
-  const static std::string subs_file_path = std::string(getenv("HOME")) + "/.config/tuitube_subs";
+  const static std::string subs_file_path = std::string(getenv("HOME")) + "/.config/tuitube/subs";
 
   // returns true if the subs file needs cleaning
   static bool refresh_subs_file() {

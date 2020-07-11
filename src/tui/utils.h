@@ -11,9 +11,8 @@ namespace tui::utils {
     static int last_selected = -1;
     static int last_height = -1;
     static int height;
-    static std::vector<std::string> draw_queue = {""};
-    static std::vector<std::string> draw_queue_right = {""};
-    static std::vector<std::string> last_draw_queue = {};
+    static std::vector<std::pair<std::string, std::string>> draw_queue;
+    static std::vector<std::pair<std::string, std::string>> last_draw_queue;
   }
 
   static void print_draw_queue(bool force_update) {
@@ -34,13 +33,13 @@ namespace tui::utils {
 
         terminal::move_cursor(0, i + 1);
 
-        if (!draw_queue[i].empty()) {
-          printf("%s", draw_queue[i].c_str());
+        if (!draw_queue[i].first.empty()) {
+          printf("%s", draw_queue[i].first.c_str());
 
 
-          if (!draw_queue_right[i].empty()) {
-            terminal::move_cursor(width - draw_queue_right[i].size() + 1, i + 1);
-              printf("%s", draw_queue_right[i].c_str());
+          if (!draw_queue[i].second.empty()) {
+            terminal::move_cursor(width - draw_queue[i].second.size() + 1, i + 1);
+              printf("%s", draw_queue[i].second.c_str());
           }
 
           if (i == 0 || i == draw_queue.size() - 1 || i - 1 == selected)
@@ -48,7 +47,7 @@ namespace tui::utils {
         }
         else {
           terminal::reset();
-          for (int j = 0; j < width - draw_queue[i].size(); j++)
+          for (int j = 0; j < width - draw_queue[i].first.size(); j++)
             printf(" ");
         }
 
@@ -72,7 +71,7 @@ namespace tui::utils {
     if (formatted_title.size() > width)
       formatted_title = formatted_title.substr(0, width - 3) + "...";
 
-    draw_queue.push_back(formatted_title);
+    draw_queue.push_back(std::make_pair(formatted_title, ""));
   }
 
   static void print_generic(int new_selected, int width, int new_height, int scroll) {
@@ -82,10 +81,28 @@ namespace tui::utils {
       terminal::clear(true);
 
     draw_queue.resize(height);
-    draw_queue_right.resize(height);
 
     last_selected = selected;
     selected = new_selected - scroll;
+  }
+
+  static void print_strings(std::vector<std::pair<std::string, std::string>> new_queue, int scroll) {
+    int max = std::min(height + scroll - 2, static_cast<int>(new_queue.size()));
+
+    for (int i = scroll; i < max; i++) {
+      std::string text = new_queue[i].first;
+      std::string right_text = new_queue[i].second;
+
+      if (text.size() + right_text.size() > width) {
+        text = text + " - " + right_text;
+        right_text = "";
+      }
+
+      if (text.size() > width)
+        text = text.substr(0, width - 3) + "...";
+
+      draw_queue[i - scroll + 1] = std::make_pair(text, right_text);
+    }
   }
 
   static void print_videos(const std::vector<invidious::c_video>& videos,
@@ -96,7 +113,7 @@ namespace tui::utils {
     if (videos.empty())
       return;
 
-    int max = std::min(height + scroll - 1, static_cast<int>(videos.size()));
+    int max = std::min(height + scroll - 2, static_cast<int>(videos.size()));
 
     for (int i = scroll; i < max; i++) {
       const auto &video = videos[i];
@@ -120,21 +137,18 @@ namespace tui::utils {
       if (text.size() > width)
         text = text.substr(0, width - 3) + "...";
 
-      draw_queue[i - scroll + 1] = text;
-      draw_queue_right[i - scroll + 1] = right_text;
+      draw_queue[i - scroll + 1] = std::make_pair(text, right_text);
     }
   }
 
   static void print_footer(const std::string& binds, int width, bool force_update) {
-    static bool footer_in_queue = false;
-
     std::string str;
     if (binds.size() > width)
       str = binds.substr(0, width - 3) + "...";
     else
       str = binds;
 
-    draw_queue.back() = str;
+    draw_queue.back().first = str;
 
     print_draw_queue(force_update);
     terminal::move_cursor(width, height);

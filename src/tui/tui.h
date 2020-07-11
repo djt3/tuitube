@@ -16,6 +16,7 @@
 #include "tabs/search.h"
 #include "tabs/popular.h"
 #include "tabs/generic_tab.h"
+#include "tabs/settings.h"
 
 namespace tui {
   static bool exit = false;
@@ -28,6 +29,7 @@ namespace tui {
     static auto* subs_tab = new tabs::c_subscriptions_tab();
     static auto* popular_tab = new tabs::c_popular_tab();
     static auto* search_tab = new tabs::c_search_tab();
+    static auto* settings_tab = new tabs::c_settings_tab();
     static tabs::c_generic_tab* current_tab = subs_tab;
 
     void input_loop() {
@@ -48,7 +50,7 @@ namespace tui {
         if (input == 'q')
           exit = true;
         else if (input == 9) { // tab
-          current_tab_idx = (current_tab_idx + 1) % 3;
+          current_tab_idx = (current_tab_idx + 1) % 4;
 
           switch (current_tab_idx) {
           case 0:
@@ -59,6 +61,9 @@ namespace tui {
             break;
           case 2:
             current_tab = search_tab;
+            break;
+          case 3:
+            current_tab = settings_tab;
             break;
           }
 
