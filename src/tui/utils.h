@@ -18,7 +18,7 @@ namespace tui::utils {
 
   static void print_draw_queue(bool force_update) {
     for (int i = 0; i < draw_queue.size(); i++) {
-      if (force_update || i > last_draw_queue.size() || height != last_height ||
+      if (force_update || i > last_draw_queue.size() || height != last_height || width != last_width ||
           (last_draw_queue.size() > i && draw_queue[i] != last_draw_queue[i]) ||
           ((selected + 1 == i ||  last_selected + 1 == i) && selected != last_selected)) {
 
@@ -78,7 +78,7 @@ namespace tui::utils {
   static void print_generic(int new_selected, int width, int new_height, int scroll) {
     last_height = height;
     height = new_height;
-    if (height != last_height)
+    if (height != last_height || width != last_width)
       terminal::clear(true);
 
     draw_queue.resize(height);
