@@ -7,15 +7,6 @@ https://gitlab.com/djt3/tuitube
 - mpv (can be changed in config.h) (mpv MUST be built with "luajit" (default in arch), else check the comments in config.h)
 - curlpp
 
-## What's working:
-- Playing videos
-- Searching for videos
-- Subscriptions page
-- Adding subscriptions from search
-- Removing subscriptions
-- Changing invidious instance (config.h, needs recompile)
-- Viewing channels
-
 ## What's planned:
 - Include channel / playlist / mix results in search
 - Suggested videos
@@ -37,7 +28,7 @@ Other:
 
 Install dependancies and
 
-`git clone https://github.com/djt3/tuitube && cd tuitube`
+`git clone https://gitlab.com/djt3/tuitube && cd tuitube`
 
 `cmake . && sudo make install`
 
