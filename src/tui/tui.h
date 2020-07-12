@@ -49,22 +49,27 @@ namespace tui {
 
         if (input == 'q')
           exit = true;
-        else if (input == 9) { // tab
-          current_tab_idx = (current_tab_idx + 1) % 4;
-
-          switch (current_tab_idx) {
-          case 0:
-            current_tab = subs_tab;
-            break;
-          case 1:
-            current_tab = popular_tab;
-            break;
-          case 2:
+        else if (input == 9 || input == '/') { // tab
+          if (input == '/') {
+            current_tab_idx = 2;
             current_tab = search_tab;
-            break;
-          case 3:
-            current_tab = settings_tab;
-            break;
+          } else {
+            current_tab_idx = (current_tab_idx + 1) % 4;
+
+            switch (current_tab_idx) {
+            case 0:
+              current_tab = subs_tab;
+              break;
+            case 1:
+              current_tab = popular_tab;
+              break;
+            case 2:
+              current_tab = search_tab;
+              break;
+            case 3:
+              current_tab = settings_tab;
+              break;
+            }
           }
 
           terminal::clear(true);
