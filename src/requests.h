@@ -128,7 +128,7 @@ namespace requests {
   }
 
   std::string extract_video_link(const std::string& url) {
-    if (config::get_value("Video Source") == "Invidious") {
+    if (config::get_value("Video Source") == "invidious") {
       std::string invidious_url = "https://" + config::get_value("Invidious Instance");
       std::string full_url = invidious_url + url;
       std::string response = make_request(full_url);
