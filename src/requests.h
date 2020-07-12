@@ -127,10 +127,12 @@ namespace requests {
     return videos;
   }
 
-  std::string extract_video_link(const std::string& url) {
-    if (config::get_value("Video Source") == "invidious") {
+  std::string extract_video_link(const std::string& url, bool audio_only = false) {
+    if (config::get_value("Video Source") == "invidious" || audio_only) {
       std::string invidious_url = "https://" + config::get_value("Invidious Instance");
       std::string full_url = invidious_url + url;
+      if (audio_only)
+        full_url += "&listen=1";
       std::string response = make_request(full_url);
 
       auto index = response.find("<source");

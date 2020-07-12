@@ -170,7 +170,7 @@ namespace tui::utils {
     printf("Playing audio %s...\n", video.title.c_str());
 
     std::string cmd = config::playcmd_start
-      + requests::extract_video_link(video.url + "&listen=1")
+      + requests::extract_video_link(video.url, true)
       + config::playcmd_end;
 
     system(cmd.c_str());
