@@ -10,7 +10,7 @@
 
 namespace invidious::instances {
   namespace {
-    std::string fastest_instance = "";
+    static std::string fastest_instance = "";
   }
 
   static std::vector<std::string> instances = {"invidious.snopyta.org", "invidio.us"};
@@ -34,15 +34,19 @@ namespace invidious::instances {
                           request.perform();
                         };
 
-    std::string first_finished = "";
+
+    auto send_request = [&](const std::string& instance) {
+                          make_request("https://" + instance + "/search?q=test");
+                          if (fastest_instance.empty())
+                            fastest_instance = instance;
+                        };
+
     for (const auto& instance : instances) {
-      threads.push_back(std::thread([&]() {make_request("https://" + instance + "/search?q=test"); first_finished = instance;}));
+      threads.push_back(std::thread([&]() {send_request(instance);}));
     }
 
-    while (first_finished.empty())
+    while (fastest_instance.empty())
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
-    fastest_instance = first_finished;
 
     for (auto& thread : threads)
       thread.detach();
