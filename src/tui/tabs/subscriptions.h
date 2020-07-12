@@ -146,7 +146,7 @@ namespace tui::tabs {
         }
 
       }
-      else if (input == 10 && viewing_sublist) {
+      else if ((input == 'c' || input == 10) && viewing_sublist) {
         view_channel = true;
         last_action = "view channel " + channel_videos[selected].channel_name;
         channel_view = c_channel_view(channel_videos[selected]);
