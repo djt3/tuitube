@@ -24,7 +24,7 @@ namespace tui::tabs {
     }
 
     void set_value(int selected_value) {
-      config::config[name] = options[selected_value];
+      config::set_value(name, options[selected_value]);
     }
   };
 
