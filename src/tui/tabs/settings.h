@@ -35,8 +35,12 @@ namespace tui::tabs {
     std::vector<c_dropdown> options;
   public:
     c_settings_tab() {
-      options.push_back(c_dropdown("Invidious Instance", {"fastest", "invidious.snopyta.org", "invidio.us", "invidious.13ad.de"}));
-      options.push_back(c_dropdown("Instance For Popular Videos", invidious::instances::instances));
+      std::vector<std::string> instances = {"fastest"};
+      for (auto& instance : invidious::instances::instances)
+        instances.push_back(instance);
+
+      options.push_back(c_dropdown("Invidious Instance", instances));
+      options.push_back(c_dropdown("Instance For Popular Videos", instances));
       options.push_back(c_dropdown("Video Source", {"invidious", "youtube (better quality)"}));
     }
 
