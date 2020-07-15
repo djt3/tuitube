@@ -50,6 +50,8 @@ namespace tui {
         if (input == 'q')
           exit = true;
         else if (input == 9 || input == '/') { // tab
+          current_tab->view_channel = false;
+
           if (input == '/') {
             current_tab_idx = 2;
             current_tab = search_tab;
