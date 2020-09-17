@@ -20,7 +20,7 @@ namespace config {
 
     // default values
     if (config.find(std::string("Invidious Instance")) == config.end())
-      config[std::string("Invidious Instance")] = "fastest";
+      config[std::string("Invidious Instance")] = "invidious.snopyta.org";
     if (config.find(std::string("Instance For Popular Videos")) == config.end())
       config[std::string("Instance For Popular Videos")] = "invidious.snopyta.org";
     if (config.find(std::string("Video Source")) == config.end())
