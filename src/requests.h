@@ -49,8 +49,68 @@ namespace requests {
 
     std::size_t index = 1;
     while (true) {
-      index = response.find("<p class=\"length\">");
-      if (index == std::string::npos)
+      index = response.find("<p><a href=\"/watch?v=");
+      if (index == std::string::npos) // no more videos left
+        break;
+
+      invidious::c_video video;
+
+      // move to start of url
+      response = response.substr(index);
+      response = response.substr(response.find('"') + 1);
+
+      video.url = response.substr(0, response.find('"'));
+
+      // move to start of title
+      response = response.substr(response.find('>') + 1);
+
+      video.title = response.substr(0, response.find('<'));
+
+      // move to start of channel url
+      response = response.substr(response.find("href=\"/channel/") + 6);
+
+      if (override_channel_url == "")
+        video.channel_url = response.substr(0, response.find('"'));
+      else
+        video.channel_url = override_channel_url;
+
+      // move to start of channel name
+      response = response.substr(response.find(">") + 1);
+
+      video.channel_name = response.substr(0, response.find("<"));
+
+      // move to start of time string
+      response = response.substr(response.find("Shared ") + 7);
+      video.time_str = response.substr(0, response.find("</div>"));
+
+      size_t space_index = response.find(' ');
+
+      uint mult = 1;
+      if (response[space_index + 1] == 's') // seconds
+        mult = 1;
+      else if (response[space_index + 2] == 'i') // minutes
+        mult = 60;
+      else if (response[space_index + 1] == 'h') // hours
+        mult = 3600;
+      else if (response[space_index + 1] == 'd') // days
+        mult = 86400;
+      else if (response[space_index + 1] == 'w') // weeks
+        mult = 604800;
+      else if (response[space_index + 2] == 'o') // months
+        mult = 18144000;
+      else if (response[space_index + 1] == 'y') // years
+        mult = 217728000;
+
+      try { // can fail if there is a playlist / mix / channel TODO: return a separate vector if wanted
+        video.time = std::stoi(response.substr(0, space_index)) * mult;
+      }
+      catch (...) {
+        continue;
+        }
+
+
+      /*index = response.find("<p class=\"length\">");
+      if (index == std::string::npos) // no videos left
         break;
 
       response = response.substr(index + 18);
@@ -118,7 +178,7 @@ namespace requests {
       }
       catch (...) {
         continue;
-      }
+        }*/
 
       video.cleanup_text();
       videos.push_back(video);
@@ -135,7 +195,7 @@ namespace requests {
         full_url += "&listen=1";
       std::string response = make_request(full_url);
 
-      auto index = response.find("<source");
+      auto index = response.find("<source src=\"/latest_version");
       if (index == std::string::npos)
         return "";
 

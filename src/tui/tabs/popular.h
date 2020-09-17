@@ -18,7 +18,7 @@ namespace tui::tabs {
     void refresh_videos() {
       last_action = "refreshing...";
       request_update = true;
-      videos = requests::extract_videos("/", "", true);
+      videos = requests::extract_videos("/feed/popular", "", true);
       c_generic_tab::refresh_videos();
     }
 

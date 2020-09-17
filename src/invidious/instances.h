@@ -13,7 +13,7 @@ namespace invidious::instances {
     static std::string fastest_instance = "";
   }
 
-  static std::vector<std::string> instances = {"invidious.snopyta.org"};
+  static std::vector<std::string> instances = {"invidious.snopyta.org", "invidiou.site"};
 
   static std::string get_fastest_instance() {
     if (!fastest_instance.empty()) {
