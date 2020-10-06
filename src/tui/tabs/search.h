@@ -76,7 +76,7 @@ namespace tui::tabs {
         } else if (input == 127) { // backspace - delete character
           if (search_text.size() > 0)
             search_text = search_text.substr(0, search_text.size() - 1);
-        } else
+        } else if ((input >= 48 && input <= 57) || (input >= 65 && input <= 90) || (input >= 97 && input <= 122))
           search_text += input;
       }
     }
