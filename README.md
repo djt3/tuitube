@@ -3,7 +3,7 @@ A minimal tui youtube (invidious) frontend made in c++
 
 https://gitlab.com/djt3/tuitube
 
-## Dependancies:
+## Dependencies:
 - youtube-dl
 - mpv (can be changed in config.h) (mpv MUST be built with "luajit" (default in arch))
 - curlpp
@@ -26,7 +26,7 @@ Arch based (arch, manjaro, artix):
 
 Other:
 
-Install dependancies and
+Install dependencies and
 
 `git clone https://gitlab.com/djt3/tuitube && cd tuitube`
 
