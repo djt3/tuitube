@@ -59,10 +59,10 @@ static void write_config() {
 // const static std::string playcmd_start = "youtube-dl -o - \"";
 // const static std::string playcmd_end = "\" | mpv -";
 
-const static std::string max_resolution = "1080";
+const static std::string max_resolution = "1080"; // set maximum resolution here
 const static std::string playcmd_start =
     "mpv --ytdl-format=\"bestvideo[height<=?" + max_resolution +
-    "]+bestaudio/best\"  \"";
+    "]+bestaudio/best\"  \""; // mpv runs youtube-dl with right arguments
 
 // old   const static std::string playcmd_start = "mpv \"";
 // url is placed in middle
