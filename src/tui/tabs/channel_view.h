@@ -9,8 +9,6 @@
 #include <thread>
 #include <vector>
 
-#include "../../invidious/video.h"
-
 namespace tui::tabs {
     class c_channel_view {
     public:
@@ -19,7 +17,7 @@ namespace tui::tabs {
 
         c_channel_view() {}
 
-        c_channel_view(invidious::c_video video) {
+        c_channel_view(videx::video video) {
             this->channel_url = video.channel_url;
         }
 
@@ -28,7 +26,8 @@ namespace tui::tabs {
             videos.clear();
             request_update = true;
 
-            videos = requests::extract_videos("/channel/" + channel_url);
+            printf("%s", channel_url.c_str());
+            videos = videx::extract_videos(channel_url);
             last_action = "";
             request_update = true;
             last_action = "";
@@ -89,7 +88,7 @@ namespace tui::tabs {
         std::string channel_url;
         int selected = 0;
         int scroll = 0;
-        std::vector<invidious::c_video> videos;
+        std::vector<videx::video> videos;
         std::string last_action = "";
     };
 }

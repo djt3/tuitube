@@ -6,6 +6,7 @@
 #include "../utils.h"
 #include "channel_view.h"
 #include "generic_tab.h"
+#include "../../../videx/src/videx.hpp"
 
 namespace tui::tabs {
   class c_search_tab : public c_generic_tab {
@@ -22,9 +23,9 @@ namespace tui::tabs {
 
     void refresh_videos() {
       last_action = "searching...";
-      std::string search_url = "/search?q=" + search_text;
+      std::string search_url = "https://www.youtube.com/results?search_query=" + search_text;
       std::replace(search_url.begin(), search_url.end(), ' ', '+');
-      videos = requests::extract_videos(search_url);
+      videos = videx::extract_videos(search_url);
       c_generic_tab::refresh_videos();
       last_action = search_text;
     }

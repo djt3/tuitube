@@ -1,5 +1,4 @@
 #include "tui/tui.h"
-#include "requests.h"
 
 #include <signal.h>
 #include <stdio.h>

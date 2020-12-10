@@ -1,0 +1,3 @@
+[submodule "videx"]
+	path = videx
+	url = ssh://git@gitlab.com/djt3/videx

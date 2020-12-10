@@ -4,7 +4,6 @@
 #include <fstream>
 
 #include "../utils.h"
-#include "../../invidious/instances.h"
 #include "channel_view.h"
 #include "generic_tab.h"
 
@@ -36,8 +35,6 @@ namespace tui::tabs {
   public:
     c_settings_tab() {
       std::vector<std::string> instances = {"fastest"};
-      for (auto& instance : invidious::instances::instances)
-        instances.push_back(instance);
 
       options.push_back(c_dropdown("Invidious Instance", instances));
       options.push_back(c_dropdown("Instance For Popular Videos", instances));

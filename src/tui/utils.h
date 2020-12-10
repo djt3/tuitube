@@ -1,8 +1,6 @@
 #ifndef TUITUBE_UTILS_H
 #define TUITUBE_UTILS_H
 
-#include "../invidious/video.h"
-
 namespace tui::utils {
   namespace {
     static int width = 0;
@@ -105,7 +103,7 @@ namespace tui::utils {
     }
   }
 
-  static void print_videos(const std::vector<invidious::c_video>& videos,
+  static void print_videos(const std::vector<videx::video>& videos,
                            int new_selected, int width, int new_height, int scroll,
                            bool channel_only = false) {
     print_generic(new_selected, width, new_height, scroll);
@@ -121,8 +119,8 @@ namespace tui::utils {
       std::string text;
       std::string right_text;
       if (!channel_only) {
-        text = video.channel_name + " - " + video.title;
-        right_text = video.length + " - " + video.time_str;
+        text = video.channel + " - " + video.title;
+        right_text = video.length + " - " + video.length;
 
         if (text.size() + right_text.size() > width) {
           text = text + " - " + right_text;
@@ -130,8 +128,8 @@ namespace tui::utils {
         }
       }
       else {
-        text = video.channel_name;
-        right_text = video.time_str;
+        text = video.channel;
+        right_text = video.length;
       }
 
       if (text.size() > width)
@@ -154,31 +152,31 @@ namespace tui::utils {
     terminal::move_cursor(width, height);
   }
 
-  static void play_video(const invidious::c_video& video) {
+  static void play_video(const videx::video& video) {
     terminal::clear(true);
-    printf("Playing video %s...\n", video.title.c_str());
+    printf("Playing video %s %s...\n", video.title.c_str(), video.url.c_str());
 
     std::string cmd = config::playcmd_start
-      + requests::extract_video_link(video.url)
+      + videx::extract_playback(video.url)
       + config::playcmd_end;
 
     system(cmd.c_str());
   }
 
-  static void play_audio(const invidious::c_video& video) {
+  static void play_audio(const videx::video& video) {
     terminal::clear(true);
     printf("Playing audio %s...\n", video.title.c_str());
 
     std::string cmd = config::playcmd_start
-      + requests::extract_video_link(video.url, true)
+      + videx::extract_playback(video.url)
       + config::playcmd_end;
 
     system(cmd.c_str());
   }
 
-  static void print_url(const invidious::c_video& video) {
+  static void print_url(const videx::video& video) {
     terminal::clear(true);
-    std::string url = requests::extract_video_link(video.url);
+    std::string url = videx::extract_playback(video.url);
     terminal::move_cursor(0, 4);
     printf("video url: %s\n", url.c_str());
   }

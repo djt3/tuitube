@@ -1,6 +1,8 @@
 #ifndef TUITUBE_SUBS_H
 #define TUITUBE_SUBS_H
 
+#include "../../videx/src/videx.hpp"
+
 namespace invidious::subs {
   static std::vector<std::string> channels;
   const static std::string subs_file_path = std::string(getenv("HOME")) + "/.config/tuitube/subs";
@@ -37,7 +39,7 @@ namespace invidious::subs {
     refresh_subs_file();
   }
 
-  static void add_sub(const invidious::c_video& video) {
+  static void add_sub(const videx::video& video) {
     std::ofstream file;
     file.open(subs_file_path.c_str(), std::ios_base::app);
     file << std::endl << video.channel_url;

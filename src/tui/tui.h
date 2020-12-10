@@ -56,7 +56,7 @@ namespace tui {
             current_tab_idx = 2;
             current_tab = search_tab;
           } else {
-            current_tab_idx = (current_tab_idx + 1) % 4;
+            current_tab_idx = (current_tab_idx + 1) % 3;
 
             switch (current_tab_idx) {
             case 0:

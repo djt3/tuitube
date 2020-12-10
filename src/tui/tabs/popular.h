@@ -6,6 +6,7 @@
 #include "../utils.h"
 #include "channel_view.h"
 #include "generic_tab.h"
+#include "../../../videx/src/videx.hpp"
 
 namespace tui::tabs {
   class c_popular_tab : public c_generic_tab {
@@ -18,7 +19,7 @@ namespace tui::tabs {
     void refresh_videos() {
       last_action = "refreshing...";
       request_update = true;
-      videos = requests::extract_videos("/feed/popular", "", true);
+      videos = videx::extract_videos("https://www.youtube.com/");
       c_generic_tab::refresh_videos();
     }
 

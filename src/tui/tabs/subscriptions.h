@@ -11,9 +11,7 @@
 #include <mutex>
 #include <algorithm>
 
-#include "../../invidious/video.h"
 #include "../../invidious/subs.h"
-#include "../../requests.h"
 #include "../../config.h"
 #include "../utils.h"
 #include "channel_view.h"
@@ -23,7 +21,7 @@ namespace tui::tabs {
   class c_subscriptions_tab : public c_generic_tab {
   private:
     bool viewing_sublist = false;
-    std::vector<invidious::c_video> channel_videos;
+    std::vector<videx::video> channel_videos;
 
   public:
     c_subscriptions_tab() {
@@ -61,7 +59,7 @@ namespace tui::tabs {
 
       for (const auto &channel : invidious::subs::channels) {
         auto scrape_fn = [&]() {
-                           auto channel_vids = requests::extract_videos("/channel/" + channel, channel);
+                           auto channel_vids = videx::extract_videos("https://www.youtube.com/channel/" + channel);
                            if (channel_vids.empty())
                              return;
 
@@ -81,8 +79,9 @@ namespace tui::tabs {
         return;
       }
 
-      auto sort_fn = [](const invidious::c_video &v1, const invidious::c_video &v2) -> bool {
-                       return v1.time < v2.time;
+      auto sort_fn = [](const videx::video &v1, const videx::video &v2) -> bool {
+                       //return v1.time < v2.time;
+                       return false;
                      };
       std::sort(videos.begin(), videos.end(), sort_fn);
 
@@ -118,10 +117,10 @@ namespace tui::tabs {
       if (input == 'u' && !videos.empty()) {
         if (!viewing_sublist) {
           invidious::subs::write_subs(videos[selected].channel_url);
-          last_action = "deleted " + videos[selected].channel_name;
+          last_action = "deleted " + videos[selected].channel;
         } else {
           invidious::subs::write_subs(channel_videos[selected].channel_url);
-          last_action = "deleted " + channel_videos[selected].channel_name;
+          last_action = "deleted " + channel_videos[selected].channel;
         }
       } else if (input == 'l' && !videos.empty()) {
         viewing_sublist = !viewing_sublist;
@@ -132,15 +131,15 @@ namespace tui::tabs {
         std::vector<std::string> channels_added;
 
         for (int i = 0; i < videos.size(); i++) {
-          std::string text = videos[i].channel_name;
+          std::string text = videos[i].channel;
 
           if (std::find(channels_added.begin(), channels_added.end(), text) == channels_added.end()) {
             channel_videos.push_back(videos[i]);
             channels_added.push_back(text);
           }
 
-          auto sort_fn = [](const invidious::c_video &v1, const invidious::c_video &v2) -> bool {
-                           return v1.channel_name < v2.channel_name;
+          auto sort_fn = [](const videx::video &v1, const videx::video &v2) -> bool {
+                           return v1.channel < v2.channel;
                          };
           std::sort(channel_videos.begin(), channel_videos.end(), sort_fn);
         }
@@ -148,7 +147,7 @@ namespace tui::tabs {
       }
       else if ((input == 'c' || input == 10) && viewing_sublist) {
         view_channel = true;
-        last_action = "view channel " + channel_videos[selected].channel_name;
+        last_action = "view channel " + channel_videos[selected].channel;
         channel_view = c_channel_view(channel_videos[selected]);
         std::thread refresh_thread([&]{channel_view.refresh_videos();});
         refresh_thread.detach();

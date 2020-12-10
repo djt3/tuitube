@@ -22,7 +22,7 @@ namespace tui::tabs {
     bool init = false;
     int selected = 0;
     int scroll = 0;
-    std::vector<invidious::c_video> videos;
+    std::vector<videx::video> videos;
     std::string last_action = "";
     std::string title;
     std::string footer = "[tab] change tab [q] quit [enter] play [a] audio only [c] view channel [d] show url";
@@ -95,7 +95,7 @@ namespace tui::tabs {
 
       if (input == 's' && can_subscribe && !videos.empty()) { // a - subscribe
         invidious::subs::add_sub(videos[selected]);
-        last_action = "subscribed to " + videos[selected].channel_name;
+        last_action = "subscribed to " + videos[selected].channel;
         return;
       }
 
@@ -135,7 +135,7 @@ namespace tui::tabs {
         last_action = "";
       } else if (input == 'c' && !videos.empty()) { // c - view channel
         view_channel = true;
-        last_action = "view channel " + videos[selected].channel_name;
+        last_action = "view channel " + videos[selected].channel;
         channel_view = c_channel_view(videos[selected]);
         std::thread refresh_thread([&]{channel_view.refresh_videos();});
         refresh_thread.detach();
