@@ -1,7 +1,6 @@
 # tuitube
-A minimal tui youtube (invidious) frontend made in c++
-
-https://gitlab.com/djt3/tuitube
+replaced by
+https://github.com/djt3/minitube
 
 ## Dependencies:
 - youtube-dl
